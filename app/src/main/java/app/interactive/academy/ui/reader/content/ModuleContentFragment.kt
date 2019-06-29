@@ -10,9 +10,10 @@ import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProviders
 import app.interactive.academy.R
-import app.interactive.academy.data.ContentEntity
+import app.interactive.academy.data.ModuleEntity
+import app.interactive.academy.viewmodel.CourseReaderViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -21,6 +22,7 @@ import app.interactive.academy.data.ContentEntity
 class ModuleContentFragment : Fragment() {
     private lateinit var webView:WebView
     private lateinit var progressBar:ProgressBar
+    private lateinit var viewModel:CourseReaderViewModel
 
     companion object{
         val TAG=ModuleContentFragment::class.java.simpleName
@@ -53,13 +55,12 @@ class ModuleContentFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.run{
-            ContentEntity("<h3 class=\\\"fr-text-bordered\\\">Contoh Content</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>").also{
-                populateWebView(it)
-            }
+            viewModel=ViewModelProviders.of(this).get(CourseReaderViewModel::class.java)
+            populateWebView(viewModel.getSelectedModule())
         }
     }
 
-    private fun populateWebView(entity: ContentEntity) {
-        webView.loadData(entity.content,"text/html","UTF-8")
+    private fun populateWebView(content: ModuleEntity?) {
+        webView.loadData(content?.contentEntity?.content,"text/html","UTF-8")
     }
 }

@@ -12,11 +12,14 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
+import app.interactive.academy.data.CourseEntity
 import app.interactive.academy.ui.detail.DetailCourseActivity
 import app.interactive.academy.utils.generateDummyCourses
+import app.interactive.academy.viewmodel.BookmarkViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -25,6 +28,8 @@ import app.interactive.academy.utils.generateDummyCourses
 class BookmarkFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
+    private lateinit var viewModel:BookmarkViewModel
+    private lateinit var courses:List<CourseEntity>
 
     companion object {
         private fun newInstance(): Fragment = BookmarkFragment()
@@ -56,6 +61,11 @@ class BookmarkFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        activity?.let{
+            viewModel=ViewModelProviders.of(it).get(BookmarkViewModel::class.java)
+            courses=viewModel.getBookmarks()
+        }
+
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
@@ -76,7 +86,7 @@ class BookmarkFragment : Fragment() {
                     }
                 }
             }.apply {
-                updateData(generateDummyCourses())
+                updateData(courses)
             }
         }
     }

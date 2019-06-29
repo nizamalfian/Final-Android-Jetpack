@@ -10,11 +10,14 @@ import android.widget.ProgressBar
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
+import app.interactive.academy.data.CourseEntity
 import app.interactive.academy.ui.detail.DetailCourseActivity
 import app.interactive.academy.utils.generateDummyCourses
+import app.interactive.academy.viewmodel.AcademyViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -23,6 +26,8 @@ import app.interactive.academy.utils.generateDummyCourses
 class AcademyFragment : Fragment() {
     private lateinit var recyclerView:RecyclerView
     private lateinit var progressBar:ProgressBar
+    private lateinit var viewModel: AcademyViewModel
+    private lateinit var courses:List<CourseEntity>
 
     companion object{
         fun newInstance():Fragment=AcademyFragment()
@@ -54,16 +59,19 @@ class AcademyFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let{
+            viewModel=ViewModelProviders.of(it).get(AcademyViewModel::class.java).also{vm->
+                courses=vm.getCourses()
+            }
+
             recyclerView.apply{
                 layoutManager=LinearLayoutManager(it)
                 setHasFixedSize(true)
                 adapter=AcademyAdapter{courseId->
                     DetailCourseActivity.launch(it,courseId,false)
                 }.apply{
-                    updateData(generateDummyCourses())
+                    updateData(courses)
                 }
             }
         }
     }
-
 }

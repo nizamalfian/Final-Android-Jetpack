@@ -3,6 +3,7 @@ package app.interactive.academy.ui.reader.list
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,16 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
 import app.interactive.academy.data.ModuleEntity
 import app.interactive.academy.ui.detail.CourseReaderCallback
-import app.interactive.academy.ui.reader.CourseReaderActivity
 import app.interactive.academy.utils.generateDummyModules
-import app.interactive.academy.utils.visible
+import app.interactive.academy.utils.gone
+import app.interactive.academy.viewmodel.CourseReaderViewModel
 import java.util.ArrayList
 
 /**
@@ -30,6 +31,7 @@ class ModuleListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var callback:CourseReaderCallback
+    private lateinit var viewModel:CourseReaderViewModel
 
     companion object{
         val TAG=ModuleListFragment::class.java.simpleName
@@ -61,7 +63,10 @@ class ModuleListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        populateRecyclerView(generateDummyModules("a14"))
+        activity?.let{
+            viewModel=ViewModelProviders.of(it).get(CourseReaderViewModel::class.java)
+            populateRecyclerView(viewModel.getModules()?:ArrayList())
+        }
     }
 
     override fun onAttach(context: Context?) {
@@ -70,15 +75,16 @@ class ModuleListFragment : Fragment() {
     }
 
     private fun populateRecyclerView(modules: ArrayList<ModuleEntity>) {
-        progressBar.visible()
         recyclerView.run{
             layoutManager=LinearLayoutManager(this@ModuleListFragment.context)
             adapter=ModuleListAdapter{ position, moduleId->
                 callback.moveTo(position,moduleId)
+                viewModel.moduleId=moduleId
             }.apply{
                 updateData(modules)
             }
             addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
         }
+        progressBar.gone()
     }
 }

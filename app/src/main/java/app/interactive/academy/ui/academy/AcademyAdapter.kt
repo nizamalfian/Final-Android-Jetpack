@@ -40,8 +40,6 @@ class AcademyAdapter(private val onItemClick:(String)->Unit):BaseAdapter<CourseE
             tvDescription.text=data.description
             tvDate.text= String.format("Deadline %s",data.deadline)
 
-            Log.d("mismis",data.description)
-
             onItemClicked{
                 onItemClick(data.courseId)
             }

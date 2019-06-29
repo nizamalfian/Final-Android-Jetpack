@@ -4,12 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProviders
 import app.interactive.academy.R
 import app.interactive.academy.ui.detail.CourseReaderCallback
 import app.interactive.academy.ui.reader.content.ModuleContentFragment
 import app.interactive.academy.ui.reader.list.ModuleListFragment
+import app.interactive.academy.viewmodel.CourseReaderViewModel
 
 class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
+    private lateinit var viewModel:CourseReaderViewModel
+
     companion object {
         fun launch(activity: Activity?, courseId: String, finish: Boolean) {
             activity?.apply {
@@ -27,10 +31,12 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_reader)
+        viewModel=ViewModelProviders.of(this).get(CourseReaderViewModel::class.java)
 
-        val courseId=intent?.extras?.getString(EXTRA_COURSE_ID)
-        if(courseId!=null)
+        intent?.extras?.getString(EXTRA_COURSE_ID)?.let{
+            viewModel.courseId=it
             populateFragment()
+        }
     }
 
     private fun populateFragment() {

@@ -27,7 +27,6 @@ abstract class BaseAdapter<T : Any>(@LayoutRes val layout: Int) :
         data?.let {
             clear()
             this.data.addAll(it)
-            Log.d("embuh1",data.size.toString())
         }
         notifyDataSetChanged()
     }
@@ -39,7 +38,6 @@ abstract class BaseAdapter<T : Any>(@LayoutRes val layout: Int) :
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: BaseViewHolderAdapter<T>, position: Int) {
-        Log.d("mismis-",position.toString())
         holder.onBind(data[position])
     }
 
