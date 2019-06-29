@@ -27,7 +27,6 @@ import java.util.ArrayList
  *
  */
 class ModuleListFragment : Fragment() {
-    private lateinit var adapter:ModuleListAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var callback:CourseReaderCallback
@@ -62,9 +61,6 @@ class ModuleListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter= ModuleListAdapter{ position, moduleId->
-            callback.moveTo(position,moduleId)
-        }
         populateRecyclerView(generateDummyModules("a14"))
     }
 
@@ -75,10 +71,13 @@ class ModuleListFragment : Fragment() {
 
     private fun populateRecyclerView(modules: ArrayList<ModuleEntity>) {
         progressBar.visible()
-        adapter.updateData(modules)
         recyclerView.run{
             layoutManager=LinearLayoutManager(this@ModuleListFragment.context)
-            adapter=adapter
+            adapter=ModuleListAdapter{ position, moduleId->
+                callback.moveTo(position,moduleId)
+            }.apply{
+                updateData(modules)
+            }
             addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
         }
     }

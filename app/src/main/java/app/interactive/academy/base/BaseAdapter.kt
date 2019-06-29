@@ -1,5 +1,6 @@
 package app.interactive.academy.base
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * on 6/26/2019
  */
-abstract class BaseAdapter<T : Any,baseViewHolder:BaseViewHolderAdapter<T>>(@LayoutRes val layout: Int) :
+abstract class BaseAdapter<T : Any>(@LayoutRes val layout: Int) :
         RecyclerView.Adapter<BaseViewHolderAdapter<T>>() {
     private val data:ArrayList<T> = ArrayList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): baseViewHolder =
-        BaseViewHolderAdapter<T>(getLayout(parent)) as baseViewHolder
-
     private fun ViewGroup.view(@LayoutRes layout:Int):View=LayoutInflater.from(this.context).inflate(layout,this,false)
 
-    private fun getLayout(parent:ViewGroup):View =
+    fun getLayout(parent:ViewGroup):View =
         parent.view(layout)
 
     fun getData():ArrayList<T> = data
@@ -29,6 +27,7 @@ abstract class BaseAdapter<T : Any,baseViewHolder:BaseViewHolderAdapter<T>>(@Lay
         data?.let {
             clear()
             this.data.addAll(it)
+            Log.d("embuh1",data.size.toString())
         }
         notifyDataSetChanged()
     }
@@ -40,6 +39,7 @@ abstract class BaseAdapter<T : Any,baseViewHolder:BaseViewHolderAdapter<T>>(@Lay
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: BaseViewHolderAdapter<T>, position: Int) {
+        Log.d("mismis-",position.toString())
         holder.onBind(data[position])
     }
 

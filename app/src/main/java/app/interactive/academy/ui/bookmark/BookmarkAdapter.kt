@@ -1,6 +1,7 @@
 package app.interactive.academy.ui.bookmark
 
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import app.interactive.academy.R
@@ -15,7 +16,9 @@ import com.bumptech.glide.request.RequestOptions
  *
  * on 6/26/2019
  */
-class BookmarkAdapter(private val onClick:(course:CourseEntity,isShareButton:Boolean)->Unit):BaseAdapter<CourseEntity,BookmarkAdapter.ViewHolder>(R.layout.items_bookmark) {
+class BookmarkAdapter(private val onClick:(course:CourseEntity,isShareButton:Boolean)->Unit):BaseAdapter<CourseEntity>(R.layout.items_bookmark) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolderAdapter<CourseEntity> =
+        ViewHolder(getLayout(parent))
 
     inner class ViewHolder(view:View):BaseViewHolderAdapter<CourseEntity>(view){
         private val tvTitle=view.findViewById<TextView>(R.id.tv_item_title)

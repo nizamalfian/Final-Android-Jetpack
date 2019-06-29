@@ -1,7 +1,6 @@
 package app.interactive.academy.ui.academy
 
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,7 +23,6 @@ import app.interactive.academy.utils.generateDummyCourses
 class AcademyFragment : Fragment() {
     private lateinit var recyclerView:RecyclerView
     private lateinit var progressBar:ProgressBar
-    private lateinit var academyAdapter: AcademyAdapter
 
     companion object{
         fun newInstance():Fragment=AcademyFragment()
@@ -56,15 +54,14 @@ class AcademyFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let{
-            academyAdapter=AcademyAdapter{courseId->
-                DetailCourseActivity.launch(activity,courseId,false)
-            }.apply{
-                updateData(generateDummyCourses())
-            }
             recyclerView.apply{
                 layoutManager=LinearLayoutManager(it)
                 setHasFixedSize(true)
-                adapter=academyAdapter
+                adapter=AcademyAdapter{courseId->
+                    DetailCourseActivity.launch(it,courseId,false)
+                }.apply{
+                    updateData(generateDummyCourses())
+                }
             }
         }
     }

@@ -1,6 +1,8 @@
 package app.interactive.academy.ui.academy
 
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import app.interactive.academy.R
@@ -15,7 +17,10 @@ import com.bumptech.glide.request.RequestOptions
  *
  * on 6/26/2019
  */
-class AcademyAdapter(private val onItemClick:(String)->Unit):BaseAdapter<CourseEntity,AcademyAdapter.ViewHolder>(R.layout.items_academy){
+class AcademyAdapter(private val onItemClick:(String)->Unit):BaseAdapter<CourseEntity>(R.layout.items_academy){
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder=
+        ViewHolder(getLayout(parent))
 
     inner class ViewHolder(view:View): BaseViewHolderAdapter<CourseEntity>(view) {
         private val tvTitle:TextView = view.findViewById(R.id.tv_item_title)
@@ -34,6 +39,8 @@ class AcademyAdapter(private val onItemClick:(String)->Unit):BaseAdapter<CourseE
             tvTitle.text=data.title
             tvDescription.text=data.description
             tvDate.text= String.format("Deadline %s",data.deadline)
+
+            Log.d("mismis",data.description)
 
             onItemClicked{
                 onItemClick(data.courseId)

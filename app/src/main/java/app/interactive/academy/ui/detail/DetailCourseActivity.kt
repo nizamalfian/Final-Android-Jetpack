@@ -3,6 +3,7 @@ package app.interactive.academy.ui.detail
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -29,7 +30,6 @@ class DetailCourseActivity : AppCompatActivity() {
     private lateinit var txtDesc:TextView
     private lateinit var txtDate:TextView
     private lateinit var recyclerView:RecyclerView
-    private lateinit var adapter:DetailCourseAdapter
     private lateinit var imagePoster:ImageView
     private lateinit var progressBar:ProgressBar
 
@@ -54,27 +54,28 @@ class DetailCourseActivity : AppCompatActivity() {
         setSupportActionBar(findViewById<Toolbar>(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        adapter= DetailCourseAdapter()
         progressBar=findViewById(R.id.progress_bar)
-        btnStart=findViewById(R.id.progress_bar)
+        btnStart=findViewById(R.id.btn_start)
         txtTitle=findViewById(R.id.text_title)
         txtDesc=findViewById(R.id.text_description)
         txtDate=findViewById(R.id.text_date)
         recyclerView=findViewById(R.id.rv_module)
         imagePoster=findViewById(R.id.image_poster)
 
-        val courseId=intent?.extras?.getString(EXTRA_COURSE)
-        courseId?.apply{
-            adapter.updateData(generateDummyModules(this))
-            populateCourse(this)
-        }
-
-        recyclerView.isNestedScrollingEnabled=false
-        recyclerView.layoutManager=LinearLayoutManager(this)
-        recyclerView.setHasFixedSize(true)
         recyclerView.apply{
+            isNestedScrollingEnabled=false
+            layoutManager=LinearLayoutManager(this@DetailCourseActivity)
+            setHasFixedSize(true)
+            adapter=DetailCourseAdapter().apply{
+                val courseId=intent?.extras?.getString(EXTRA_COURSE)
+                courseId?.let{
+                    updateData(generateDummyModules(it))
+                    populateCourse(it)
+                }
+            }
             addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
         }
+        Log.d("cek_log",recyclerView.adapter?.itemCount.toString())
     }
 
     private fun populateCourse(courseId: String) {

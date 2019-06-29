@@ -25,7 +25,6 @@ import app.interactive.academy.utils.generateDummyCourses
 class BookmarkFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private lateinit var academyAdapter: BookmarkAdapter
 
     companion object {
         private fun newInstance(): Fragment = BookmarkFragment()
@@ -51,35 +50,34 @@ class BookmarkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = view.findViewById(R.id.rv_academy)
+        recyclerView = view.findViewById(R.id.rv_bookmark)
         progressBar = view.findViewById(R.id.progress_bar)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        academyAdapter = BookmarkAdapter{course,isShareButton->
-            activity.apply{
-                if(isShareButton) {
-                    val mimeType="text/plain"
-                    ShareCompat.IntentBuilder
-                        .from(this)
-                        .setType(mimeType)
-                        .setChooserTitle("Bagikan aplikasi ini sekarang.")
-                        .setText(String.format("Segera daftar kelas %s di dicoding.com", course.title))
-                        .startChooser()
-                }else{
-                    startActivity(Intent(this, DetailCourseActivity::class.java).apply {
-                        putExtra(DetailCourseActivity.EXTRA_COURSE,course.courseId)
-                    })
-                }
-            }
-        }.apply {
-            updateData(generateDummyCourses())
-        }
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            adapter = academyAdapter
+            adapter = BookmarkAdapter{course,isShareButton->
+                activity.apply{
+                    if(isShareButton) {
+                        val mimeType="text/plain"
+                        ShareCompat.IntentBuilder
+                            .from(this)
+                            .setType(mimeType)
+                            .setChooserTitle("Bagikan aplikasi ini sekarang.")
+                            .setText(String.format("Segera daftar kelas %s di dicoding.com", course.title))
+                            .startChooser()
+                    }else{
+                        startActivity(Intent(this, DetailCourseActivity::class.java).apply {
+                            putExtra(DetailCourseActivity.EXTRA_COURSE,course.courseId)
+                        })
+                    }
+                }
+            }.apply {
+                updateData(generateDummyCourses())
+            }
         }
     }
 

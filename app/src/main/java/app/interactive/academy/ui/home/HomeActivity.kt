@@ -18,10 +18,10 @@ class HomeActivity : AppCompatActivity() {
         navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(navigationItemSelectedListener)
 
-        if(savedInstanceState!=null)
-            savedInstanceState.getInt(SELECTED_MENU)
-        else
-            navView.selectedItemId=R.id.action_home
+        navView.selectedItemId=when(savedInstanceState!=null){
+            true->savedInstanceState.getInt(SELECTED_MENU)
+            false->R.id.action_home
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
