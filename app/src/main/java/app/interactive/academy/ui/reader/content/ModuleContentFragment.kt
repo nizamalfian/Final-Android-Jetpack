@@ -25,7 +25,7 @@ class ModuleContentFragment : Fragment() {
     private lateinit var viewModel:CourseReaderViewModel
 
     companion object{
-        val TAG=ModuleContentFragment::class.java.simpleName
+        private val TAG: String =ModuleContentFragment::class.java.simpleName
         private fun newInstance(): Fragment = ModuleContentFragment()
         fun attach(activity: AppCompatActivity, @IdRes container:Int, fragment:Fragment= newInstance()){
             activity.run {
