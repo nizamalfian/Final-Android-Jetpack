@@ -15,8 +15,8 @@ import java.io.IOException
  * on 7/8/2019
  */
 class JSONHelper(private val application: Application){
-    private fun parsingFileToString(fileName:String):String{
-        var result=""
+    private fun parsingFileToString(fileName:String):String?{
+        var result:String?=null
         try{
             application.assets.open(fileName).also{
                 ByteArray(it.available()).apply{
@@ -27,7 +27,7 @@ class JSONHelper(private val application: Application){
             }
         }catch (e:IOException){
             e.printStackTrace()
-            Log.e("parsing",e.message)
+            Log.e("parsingg",e.message)
         }finally {
             return result
         }
@@ -51,15 +51,9 @@ class JSONHelper(private val application: Application){
                     }
                 }
             }
-        }catch(e:IOException){
-            e.printStackTrace()
-            Log.e("parsing_io_1",e.message)
         }catch(e:JSONException){
             e.printStackTrace()
             Log.e("parsing_json_1",e.message)
-        }catch(e:Exception){
-            e.printStackTrace()
-            Log.e("parsing_ex_1",e.message)
         }finally {
             return result
         }
@@ -84,9 +78,6 @@ class JSONHelper(private val application: Application){
                     }
                 }
             }
-        }catch(e:IOException){
-            e.printStackTrace()
-            Log.e("parsing_io_2",e.message)
         }catch(e:JSONException){
             e.printStackTrace()
             Log.e("parsing_json_2",e.message)
@@ -104,9 +95,6 @@ class JSONHelper(private val application: Application){
                     JSONObject(this).getString("content")
                 )
             }
-        }catch(e:IOException){
-            e.printStackTrace()
-            Log.e("parsing_io_3",e.message)
         }catch (e:JSONException){
             e.printStackTrace()
             Log.d("parsing_json_3",e.message)

@@ -1,7 +1,6 @@
 package app.interactive.academy.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.annotation.NonNull
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -23,18 +22,13 @@ class ViewModelFactory(private val academyRepository: AcademyRepository):ViewMod
     companion object{
         private var INSTANCE:ViewModelFactory?=null
         fun getInstance(application: Application):ViewModelFactory{
-            Log.d("parsing_vmf","viewModelFactory ${application==null}")
             if(INSTANCE==null){
-                Log.d("parsing","viewModelFactory_0 ${application==null}")
                 synchronized(ViewModelFactory::class.java){
-                    Log.d("parsing","viewModelFactory_1 ${application==null}")
                     if(INSTANCE==null){
-                        Log.d("parsing","viewModelFactory_2 ${application==null}")
                         INSTANCE= ViewModelFactory(Injection.provideRepository(application))
                     }
                 }
             }
-            Log.d("parsing","viewModelFactory_3 ${application==null}")
             return INSTANCE as ViewModelFactory
         }
     }
