@@ -15,8 +15,7 @@ class AcademyRepository(private val localRepository: LocalRepository, private va
     AcademyDataSource {
 
     companion object {
-        @Volatile
-        private lateinit var INSTANCE: AcademyRepository
+        private var INSTANCE: AcademyRepository?=null
 
         fun getInstance(localRepository: LocalRepository, remoteRepository: RemoteRepository): AcademyRepository {
             if (INSTANCE == null) {
@@ -27,7 +26,7 @@ class AcademyRepository(private val localRepository: LocalRepository, private va
                     }
                 }
             }
-            return INSTANCE
+            return INSTANCE as AcademyRepository
         }
     }
 

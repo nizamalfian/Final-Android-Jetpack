@@ -11,11 +11,11 @@ import app.interactive.academy.data.source.remote.response.ModuleResponse
  */
 class RemoteRepository(private val jsonHelper: JSONHelper){
     companion object{
-        private lateinit var INSTANCE:RemoteRepository
+        private var INSTANCE:RemoteRepository?=null
         fun getInstance(jsonHelper: JSONHelper):RemoteRepository{
             if(INSTANCE==null)
                 INSTANCE=RemoteRepository(jsonHelper)
-            return INSTANCE
+            return INSTANCE as RemoteRepository
         }
     }
 
