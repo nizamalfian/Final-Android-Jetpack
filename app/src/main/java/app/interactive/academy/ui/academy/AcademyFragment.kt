@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.ui.detail.DetailCourseActivity
+import app.interactive.academy.ui.viewmodel.ViewModelFactory
 
 /**
  * A simple [Fragment] subclass.
@@ -57,7 +58,7 @@ class AcademyFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let{
-            viewModel=ViewModelProviders.of(it).get(AcademyViewModel::class.java).also{ vm->
+            viewModel=ViewModelProviders.of(it,ViewModelFactory.getInstance(it.application)).get(AcademyViewModel::class.java).also{ vm->
                 courses=vm.getCourses()
             }
 

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.ui.detail.DetailCourseActivity
+import app.interactive.academy.ui.viewmodel.ViewModelFactory
 
 /**
  * A simple [Fragment] subclass.
@@ -60,7 +61,7 @@ class BookmarkFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let{
-            viewModel=ViewModelProviders.of(it).get(BookmarkViewModel::class.java)
+            viewModel=ViewModelProviders.of(it,ViewModelFactory.getInstance(it.application)).get(BookmarkViewModel::class.java)
             courses=viewModel.getBookmarks()
         }
 

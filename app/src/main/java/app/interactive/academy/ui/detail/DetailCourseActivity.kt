@@ -17,6 +17,7 @@ import app.interactive.academy.R
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.ui.reader.CourseReaderActivity
+import app.interactive.academy.ui.viewmodel.ViewModelFactory
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -54,7 +55,7 @@ class DetailCourseActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         setSupportActionBar(findViewById<Toolbar>(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        viewModel=ViewModelProviders.of(this).get(DetailCourseViewModel::class.java)
+        viewModel=ViewModelProviders.of(this,ViewModelFactory.getInstance(application)).get(DetailCourseViewModel::class.java)
 
         progressBar = findViewById(R.id.progress_bar)
         btnStart = findViewById(R.id.btn_start)

@@ -19,6 +19,7 @@ import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.ui.detail.CourseReaderCallback
 import app.interactive.academy.utils.gone
 import app.interactive.academy.ui.reader.CourseReaderViewModel
+import app.interactive.academy.ui.viewmodel.ViewModelFactory
 import java.util.ArrayList
 
 /**
@@ -62,7 +63,7 @@ class ModuleListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let{
-            viewModel=ViewModelProviders.of(it).get(CourseReaderViewModel::class.java)
+            viewModel=ViewModelProviders.of(it,ViewModelFactory.getInstance(it.application)).get(CourseReaderViewModel::class.java)
             populateRecyclerView(viewModel.getModules()?:ArrayList())
         }
     }

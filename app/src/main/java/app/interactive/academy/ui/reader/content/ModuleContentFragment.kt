@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import app.interactive.academy.R
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.ui.reader.CourseReaderViewModel
+import app.interactive.academy.ui.viewmodel.ViewModelFactory
 
 /**
  * A simple [Fragment] subclass.
@@ -55,7 +56,7 @@ class ModuleContentFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.run{
-            viewModel=ViewModelProviders.of(this).get(CourseReaderViewModel::class.java)
+            viewModel=ViewModelProviders.of(this,ViewModelFactory.getInstance(application)).get(CourseReaderViewModel::class.java)
             populateWebView(viewModel.getSelectedModule())
         }
     }

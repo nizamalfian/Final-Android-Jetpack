@@ -9,6 +9,7 @@ import app.interactive.academy.R
 import app.interactive.academy.ui.detail.CourseReaderCallback
 import app.interactive.academy.ui.reader.content.ModuleContentFragment
 import app.interactive.academy.ui.reader.list.ModuleListFragment
+import app.interactive.academy.ui.viewmodel.ViewModelFactory
 
 class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
     private lateinit var viewModel: CourseReaderViewModel
@@ -30,7 +31,7 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_reader)
-        viewModel=ViewModelProviders.of(this).get(CourseReaderViewModel::class.java)
+        viewModel=ViewModelProviders.of(this,ViewModelFactory.getInstance(application)).get(CourseReaderViewModel::class.java)
 
         intent?.extras?.getString(EXTRA_COURSE_ID)?.let{
             viewModel.courseId=it
