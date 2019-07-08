@@ -1,5 +1,6 @@
 package app.interactive.academy.viewmodel
 
+import app.interactive.academy.ui.academy.AcademyViewModel
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before

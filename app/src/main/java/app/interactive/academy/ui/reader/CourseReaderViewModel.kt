@@ -1,8 +1,8 @@
-package app.interactive.academy.viewmodel
+package app.interactive.academy.ui.reader
 
 import androidx.lifecycle.ViewModel
-import app.interactive.academy.data.ContentEntity
-import app.interactive.academy.data.ModuleEntity
+import app.interactive.academy.data.source.local.entity.ContentEntity
+import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.utils.generateDummyModules
 
 /**

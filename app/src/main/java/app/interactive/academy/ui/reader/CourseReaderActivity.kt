@@ -9,10 +9,9 @@ import app.interactive.academy.R
 import app.interactive.academy.ui.detail.CourseReaderCallback
 import app.interactive.academy.ui.reader.content.ModuleContentFragment
 import app.interactive.academy.ui.reader.list.ModuleListFragment
-import app.interactive.academy.viewmodel.CourseReaderViewModel
 
 class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
-    private lateinit var viewModel:CourseReaderViewModel
+    private lateinit var viewModel: CourseReaderViewModel
 
     companion object {
         fun launch(activity: Activity?, courseId: String, finish: Boolean) {

@@ -1,4 +1,4 @@
-package app.interactive.academy.data
+package app.interactive.academy.data.source.local.entity
 
 /**
  * Created by L

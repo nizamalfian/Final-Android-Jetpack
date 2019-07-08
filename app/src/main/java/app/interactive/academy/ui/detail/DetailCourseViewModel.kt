@@ -1,8 +1,8 @@
-package app.interactive.academy.viewmodel
+package app.interactive.academy.ui.detail
 
 import androidx.lifecycle.ViewModel
-import app.interactive.academy.data.CourseEntity
-import app.interactive.academy.data.ModuleEntity
+import app.interactive.academy.data.source.local.entity.CourseEntity
+import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.utils.generateDummyCourses
 import app.interactive.academy.utils.generateDummyModules
 
@@ -14,7 +14,7 @@ import app.interactive.academy.utils.generateDummyModules
 class DetailCourseViewModel:ViewModel() {
     var courseId:String?=null
 
-    fun getCourse():CourseEntity?{
+    fun getCourse(): CourseEntity?{
         generateDummyCourses().forEach {
             if(it.courseId == courseId){
                 return it

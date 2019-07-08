@@ -7,7 +7,7 @@ import android.widget.TextView
 import app.interactive.academy.R
 import app.interactive.academy.base.BaseAdapter
 import app.interactive.academy.base.BaseViewHolderAdapter
-import app.interactive.academy.data.CourseEntity
+import app.interactive.academy.data.source.local.entity.CourseEntity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -16,7 +16,7 @@ import com.bumptech.glide.request.RequestOptions
  *
  * on 6/26/2019
  */
-class BookmarkAdapter(private val onClick:(course:CourseEntity,isShareButton:Boolean)->Unit):BaseAdapter<CourseEntity>(R.layout.items_bookmark) {
+class BookmarkAdapter(private val onClick:(course: CourseEntity, isShareButton:Boolean)->Unit):BaseAdapter<CourseEntity>(R.layout.items_bookmark) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolderAdapter<CourseEntity> =
         ViewHolder(getLayout(parent))
 

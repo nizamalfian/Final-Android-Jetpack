@@ -1,7 +1,7 @@
-package app.interactive.academy.viewmodel
+package app.interactive.academy.ui.bookmark
 
 import androidx.lifecycle.ViewModel
-import app.interactive.academy.data.CourseEntity
+import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.utils.generateDummyCourses
 
 /**

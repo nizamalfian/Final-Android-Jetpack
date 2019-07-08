@@ -1,0 +1,112 @@
+package app.interactive.academy.data
+
+import app.interactive.academy.data.source.local.LocalRepository
+import app.interactive.academy.data.source.local.entity.ContentEntity
+import app.interactive.academy.data.source.local.entity.CourseEntity
+import app.interactive.academy.data.source.local.entity.ModuleEntity
+import app.interactive.academy.data.source.remote.RemoteRepository
+import app.interactive.academy.data.source.remote.response.CourseResponse
+
+/**
+ * Created by L
+ *
+ * on 7/8/2019
+ */
+class AcademyRepository(private val localRepository: LocalRepository,private val remoteRepository: RemoteRepository):AcademyDataSource {
+
+    companion object{
+        @Volatile private lateinit var INSTANCE: AcademyRepository
+        fun getInstance(localRepository: LocalRepository,remoteRepository: RemoteRepository): AcademyRepository?{
+            if(INSTANCE ==null){
+                synchronized(AcademyRepository::class.java){
+                    if(INSTANCE ==null){
+                        INSTANCE =
+                            AcademyRepository(localRepository, remoteRepository)
+                    }
+                }
+            }
+            return INSTANCE
+        }
+    }
+
+    override fun getAllCourses(): List<CourseResponse> {
+        return ArrayList<CourseResponse>().also{
+            remoteRepository.getAllCourses().forEach{course->
+                it.add(
+                    CourseResponse(
+                    course.id,
+                    course.title,
+                    course.description,
+                    course.date,
+                    course.imagePath
+                )
+                )
+            }
+        }
+    }
+
+    override fun getCourseWithModule(courseId: String): CourseEntity? {
+        var course:CourseEntity?=null
+        remoteRepository.getAllCourses().forEach {
+            if(it.id==courseId){
+                course=CourseEntity(
+                    it.id,
+                    it.title,
+                    it.description,
+                    it.date,
+                    it.imagePath
+                )
+            }
+        }
+        return course
+    }
+
+    override fun getAllModulesByCourse(courseId: String): List<ModuleEntity> {
+        return ArrayList<ModuleEntity>().also{
+            remoteRepository.getAllModules(courseId).forEach {module->
+                it.add(
+                    ModuleEntity(
+                    module.moduleId,
+                    module.courseId,
+                    module.title,
+                    module.position
+                )
+                )
+            }
+        }
+    }
+
+    override fun getBookmarkedCourses(): List<CourseEntity> {
+        return ArrayList<CourseEntity>().also{
+            remoteRepository.getAllCourses().forEach { course->
+                it.add(CourseEntity(
+                    course.id,
+                    course.title,
+                    course.description,
+                    course.date,
+                    course.imagePath
+                ))
+            }
+        }
+    }
+
+    override fun getContent(courseId: String, moduleId: String): ModuleEntity?{
+        var moduleEntity:ModuleEntity?=null
+        remoteRepository.getAllModules(courseId).forEach {
+            if(it.moduleId==moduleId){
+                moduleEntity= ModuleEntity(
+                    it.moduleId,
+                    it.courseId,
+                    it.title,
+                    it.position,
+                    remoteRepository.getContent(moduleId)?.content?.let { content ->
+                        ContentEntity(
+                            content
+                        )
+                    }
+                )
+            }
+        }
+        return moduleEntity
+    }
+}

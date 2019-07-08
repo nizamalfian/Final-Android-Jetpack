@@ -12,8 +12,8 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import app.interactive.academy.R
-import app.interactive.academy.data.ModuleEntity
-import app.interactive.academy.viewmodel.CourseReaderViewModel
+import app.interactive.academy.data.source.local.entity.ModuleEntity
+import app.interactive.academy.ui.reader.CourseReaderViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -22,7 +22,7 @@ import app.interactive.academy.viewmodel.CourseReaderViewModel
 class ModuleContentFragment : Fragment() {
     private lateinit var webView:WebView
     private lateinit var progressBar:ProgressBar
-    private lateinit var viewModel:CourseReaderViewModel
+    private lateinit var viewModel: CourseReaderViewModel
 
     companion object{
         private val TAG: String =ModuleContentFragment::class.java.simpleName

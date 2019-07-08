@@ -16,10 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
-import app.interactive.academy.data.CourseEntity
+import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.ui.detail.DetailCourseActivity
-import app.interactive.academy.utils.generateDummyCourses
-import app.interactive.academy.viewmodel.BookmarkViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -28,7 +26,7 @@ import app.interactive.academy.viewmodel.BookmarkViewModel
 class BookmarkFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private lateinit var viewModel:BookmarkViewModel
+    private lateinit var viewModel: BookmarkViewModel
     private lateinit var courses:List<CourseEntity>
 
     companion object {

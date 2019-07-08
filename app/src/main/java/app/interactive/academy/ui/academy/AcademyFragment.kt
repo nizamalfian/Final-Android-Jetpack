@@ -14,10 +14,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
-import app.interactive.academy.data.CourseEntity
+import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.ui.detail.DetailCourseActivity
-import app.interactive.academy.utils.generateDummyCourses
-import app.interactive.academy.viewmodel.AcademyViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -59,7 +57,7 @@ class AcademyFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let{
-            viewModel=ViewModelProviders.of(it).get(AcademyViewModel::class.java).also{vm->
+            viewModel=ViewModelProviders.of(it).get(AcademyViewModel::class.java).also{ vm->
                 courses=vm.getCourses()
             }
 

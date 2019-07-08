@@ -1,7 +1,7 @@
 package app.interactive.academy.ui.detail
 
 import androidx.test.rule.ActivityTestRule
-import app.interactive.academy.data.CourseEntity
+import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.utils.generateDummyCourses
 
 import org.junit.Before
@@ -23,7 +23,7 @@ import app.utils.RecyclerViewItemCountAssertion
  */
 @RunWith(MockitoJUnitRunner::class)
 class DetailCourseActivityTest {
-    private val dummyCourse:CourseEntity= generateDummyCourses()[0]
+    private val dummyCourse: CourseEntity = generateDummyCourses()[0]
 
     @get:Rule
     val activityRule: ActivityTestRule<DetailCourseActivity> =

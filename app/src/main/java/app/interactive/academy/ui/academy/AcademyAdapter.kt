@@ -1,6 +1,5 @@
 package app.interactive.academy.ui.academy
 
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -8,7 +7,7 @@ import android.widget.TextView
 import app.interactive.academy.R
 import app.interactive.academy.base.BaseAdapter
 import app.interactive.academy.base.BaseViewHolderAdapter
-import app.interactive.academy.data.CourseEntity
+import app.interactive.academy.data.source.local.entity.CourseEntity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
