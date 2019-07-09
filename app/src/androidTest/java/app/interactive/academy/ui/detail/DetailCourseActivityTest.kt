@@ -2,7 +2,6 @@ package app.interactive.academy.ui.detail
 
 import androidx.test.rule.ActivityTestRule
 import app.interactive.academy.data.source.local.entity.CourseEntity
-import app.utils.generateDummyCourses
 
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -15,6 +14,7 @@ import org.junit.Test
 import app.interactive.academy.R
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import app.interactive.academy.data.dummy.generateDummyCourses
 import app.utils.RecyclerViewItemCountAssertion
 
 

@@ -1,11 +1,11 @@
-package app.utils
-
+package app.interactive.academy.data.dummy
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 
 /**
  * Created by nizamalfian on 01/07/2019.
  */
+
 fun generateDummyCourses(): ArrayList<CourseEntity> {
     return ArrayList<CourseEntity>().apply {
         add(
