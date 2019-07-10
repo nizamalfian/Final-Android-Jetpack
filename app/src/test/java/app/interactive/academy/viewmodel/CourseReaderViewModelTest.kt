@@ -1,5 +1,6 @@
 package app.interactive.academy.viewmodel
 
+import app.interactive.academy.data.AcademyRepository
 import app.interactive.academy.data.source.local.entity.ContentEntity
 import app.interactive.academy.ui.reader.CourseReaderViewModel
 import org.junit.Assert.assertEquals
@@ -8,6 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.junit.Assert.assertNotNull
+import org.mockito.Mockito
 
 /**
  * Created by nizamalfian on 30/06/2019.
@@ -18,10 +20,11 @@ class CourseReaderViewModelTest {
     private lateinit var viewModel: CourseReaderViewModel
     private lateinit var content: ContentEntity
     private lateinit var moduleId:String
+    private val academyRepository= Mockito.mock(AcademyRepository::class.java)
 
     @Before
     fun setUp() {
-        viewModel = CourseReaderViewModel()
+        viewModel = CourseReaderViewModel(academyRepository)
         viewModel.courseId="a14"
         moduleId="a14m1"
         val title= viewModel.getModules()?.get(0)?.title
