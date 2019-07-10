@@ -1,9 +1,10 @@
 package app.interactive.academy.viewmodel
 
 import app.interactive.academy.data.AcademyRepository
+import app.interactive.academy.data.dummy.generateDummyCourses
+import app.interactive.academy.data.dummy.generateDummyModules
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.ui.detail.DetailCourseViewModel
-import app.interactive.academy.utils.generateDummyCoursesUnitTest
 
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -23,14 +24,14 @@ import org.mockito.Mockito.verify
 class DetailCourseViewModelTest {
 
     private lateinit var viewModel: DetailCourseViewModel
-    private val academyRepository= Mockito.mock(AcademyRepository::class.java)
-    private val dummyCourse: CourseEntity= generateDummyCoursesUnitTest()[0]
-    private val courseId:String=dummyCourse.courseId
+    private val academyRepository = Mockito.mock(AcademyRepository::class.java)
+    private val dummyCourse: CourseEntity = generateDummyCourses()[0]
+    private val courseId: String = dummyCourse.courseId
 
     @Before
     fun setUp() {
-        viewModel = DetailCourseViewModel(academyRepository).also{
-            it.courseId=courseId
+        viewModel = DetailCourseViewModel(academyRepository).also {
+            it.courseId = courseId
         }
         /*dummyCourse= CourseEntity(
             "a14",
@@ -43,38 +44,26 @@ class DetailCourseViewModelTest {
     }
 
     @After
-    fun tearDown(){}
+    fun tearDown() {
+    }
 
     @Test
-    fun getCourse() {
+    fun testGetCourse() {
         `when`(academyRepository.getCourseWithModule(courseId)).thenReturn(dummyCourse)
-        val courseEntity=viewModel.getCourse()
+        val courseEntity = viewModel.getCourse()
         verify(academyRepository).getCourseWithModule(courseId)
+        assertNotNull(courseEntity)
+        val courseId = viewModel.courseId
+        assertNotNull(courseId)
+        assertEquals(courseId, dummyCourse.courseId)
     }
 
     @Test
-    fun getModules() {
-        val modules=viewModel.getModules()
+    fun testGetModules() {
+        `when`(academyRepository.getAllModulesByCourse(courseId)).thenReturn(generateDummyModules(courseId))
+        val modules = viewModel.getModules()
+        verify(academyRepository).getAllModulesByCourse(courseId)
         assertNotNull(modules)
-        assertEquals(7,modules.size)
+        assertEquals(7, modules.size)
     }
-
-    /*@Test
-    fun getCourse() {
-        viewModel.courseId=dummyCourse.courseId
-        val course=viewModel.getCourse()
-        assertNotNull(course)
-        assertEquals(dummyCourse.courseId,course?.courseId)
-        assertEquals(dummyCourse.deadline,course?.deadline)
-        assertEquals(dummyCourse.description,course?.description)
-        assertEquals(dummyCourse.imagePath,course?.imagePath)
-        assertEquals(dummyCourse.title,course?.title)
-    }
-
-    @Test
-    fun getModules() {
-        val modules=viewModel.getModules()
-        assertNotNull(modules)
-        assertEquals(7,modules.size)
-    }*/
 }

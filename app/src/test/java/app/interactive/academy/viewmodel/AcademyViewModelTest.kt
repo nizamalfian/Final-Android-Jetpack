@@ -2,7 +2,6 @@ package app.interactive.academy.viewmodel
 
 import app.interactive.academy.data.AcademyRepository
 import app.interactive.academy.ui.academy.AcademyViewModel
-import app.interactive.academy.utils.generateDummyCourses
 import app.interactive.academy.utils.generateDummyCoursesUnitTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -37,9 +36,8 @@ class AcademyViewModelTest {
         assertNotNull1(courseEntities)
         assertEquals(5,courseEntities.size)
     }*/
-
     @Test
-    fun testGetCourses(){
+    fun testGetCourse(){
         `when`(academyRepository.getAllCourses()).thenReturn(generateDummyCoursesUnitTest())
         val courseEntities=viewModel.getCourses()
         verify(academyRepository).getAllCourses()

@@ -33,7 +33,7 @@ class AcademyFragmentTest {
     @Test
     fun loadCourses(){
         onView(withId(R.id.rv_academy)).check(matches(isDisplayed()))
-        onView(withId(R.id.rv_academy)).check(RecyclerViewItemCountAssertion(5))
+        onView(withId(R.id.rv_academy)).check(RecyclerViewItemCountAssertion(4))
     }
 
 }

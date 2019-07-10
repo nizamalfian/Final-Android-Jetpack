@@ -6,7 +6,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
-import app.utils.generateDummyCourses
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,6 +17,7 @@ import app.interactive.academy.R
 import app.utils.RecyclerViewItemCountAssertion
 import androidx.recyclerview.widget.RecyclerView.ViewHolder as ViewHolder
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import app.interactive.academy.data.dummy.generateDummyCourses
 
 /**
  * Created by nizamalfian on 01/07/2019.
@@ -43,7 +43,7 @@ class CourseReaderActivityTest {
     @Test
     fun loadModules(){
         onView(withId(R.id.rv_module)).check(matches(isDisplayed()))
-        onView(withId(R.id.rv_module)).check(RecyclerViewItemCountAssertion(7))
+        onView(withId(R.id.rv_module)).check(RecyclerViewItemCountAssertion(6))
     }
 
     @Test
