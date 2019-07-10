@@ -51,6 +51,6 @@ class DetailCourseActivityTest {
     @Test
     fun loadModules(){
         onView(withId(R.id.rv_module)).check(matches(isDisplayed()))
-        onView(withId(R.id.rv_module)).check(RecyclerViewItemCountAssertion(7))
+        onView(withId(R.id.rv_module)).check(RecyclerViewItemCountAssertion(6))
     }
 }
