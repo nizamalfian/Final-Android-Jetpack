@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.ui.reader.CourseReaderActivity
 import app.interactive.academy.ui.viewmodel.ViewModelFactory
+import app.interactive.academy.utils.gone
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -72,11 +74,21 @@ class DetailCourseActivity : AppCompatActivity() {
             adapter = DetailCourseAdapter().apply {
                 intent?.extras?.getString(EXTRA_COURSE)?.let {
                     viewModel.courseId=it
-                    modules=viewModel.getModules()
-                    updateData(modules)
+                    viewModel.getModules().observe(this@DetailCourseActivity,
+                        Observer<ArrayList<ModuleEntity>>{
+                            progressBar.gone()
+                            modules=it.also{
+                                updateData(it)
+                            }
+                        })
+//                    modules=viewModel.getModules()
+//                    updateData(modules)
                 }
             }
-            viewModel.getCourse()?.let { populateCourse(it) }
+            viewModel.getCourse().observe(this@DetailCourseActivity,
+                Observer<CourseEntity>{
+                    populateCourse(it)
+                })
             addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
         }
     }

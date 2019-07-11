@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,8 +64,13 @@ class ModuleListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let{
-            viewModel=ViewModelProviders.of(it,ViewModelFactory.getInstance(it.application)).get(CourseReaderViewModel::class.java)
-            populateRecyclerView(viewModel.getModules()?:ArrayList())
+            viewModel=ViewModelProviders.of(it,ViewModelFactory.getInstance(it.application)).get(CourseReaderViewModel::class.java).also{
+                it.getModules().observe(this,
+                    Observer<ArrayList<ModuleEntity>>{
+                        progressBar.gone()
+                        populateRecyclerView(it)
+                    })
+            }
         }
     }
 

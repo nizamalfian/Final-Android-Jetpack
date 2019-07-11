@@ -1,5 +1,6 @@
 package app.interactive.academy.ui.reader
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import app.interactive.academy.data.AcademyRepository
 import app.interactive.academy.data.source.local.entity.ContentEntity
@@ -25,7 +26,7 @@ class CourseReaderViewModel(private val academyRepository: AcademyRepository):Vi
         return null
     }*/
 
-    fun getModules(): ArrayList<ModuleEntity>? = academyRepository.getAllModulesByCourse(courseId?:"")
+    fun getModules(): MutableLiveData<ArrayList<ModuleEntity>> = academyRepository.getAllModulesByCourse(courseId?:"")
 
-    fun getSelectedModule(): ModuleEntity? = academyRepository.getContent(courseId?:"",moduleId?:"")
+    fun getSelectedModule(): MutableLiveData<ModuleEntity> = academyRepository.getContent(courseId?:"",moduleId?:"")
 }

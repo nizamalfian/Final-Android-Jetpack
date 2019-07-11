@@ -10,6 +10,7 @@ import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import app.interactive.academy.R
 import app.interactive.academy.data.source.local.entity.ModuleEntity
@@ -21,18 +22,18 @@ import app.interactive.academy.ui.viewmodel.ViewModelFactory
  *
  */
 class ModuleContentFragment : Fragment() {
-    private lateinit var webView:WebView
-    private lateinit var progressBar:ProgressBar
+    private lateinit var webView: WebView
+    private lateinit var progressBar: ProgressBar
     private lateinit var viewModel: CourseReaderViewModel
 
-    companion object{
-        private val TAG: String =ModuleContentFragment::class.java.simpleName
+    companion object {
+        private val TAG: String = ModuleContentFragment::class.java.simpleName
         private fun newInstance(): Fragment = ModuleContentFragment()
-        fun attach(activity: AppCompatActivity, @IdRes container:Int, fragment:Fragment= newInstance()){
+        fun attach(activity: AppCompatActivity, @IdRes container: Int, fragment: Fragment = newInstance()) {
             activity.run {
                 supportFragmentManager
                     .beginTransaction()
-                    .add(container,fragment,TAG)
+                    .add(container, fragment, TAG)
                     .addToBackStack(null)
                     .commit()
             }
@@ -49,19 +50,24 @@ class ModuleContentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        webView=view.findViewById(R.id.web_view)
-        progressBar=view.findViewById(R.id.progress_bar)
+        webView = view.findViewById(R.id.web_view)
+        progressBar = view.findViewById(R.id.progress_bar)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity?.run{
-            viewModel=ViewModelProviders.of(this,ViewModelFactory.getInstance(application)).get(CourseReaderViewModel::class.java)
-            populateWebView(viewModel.getSelectedModule())
+        activity?.run {
+            viewModel = ViewModelProviders.of(this, ViewModelFactory.getInstance(application))
+                .get(CourseReaderViewModel::class.java).also {
+                it.getSelectedModule().observe(this,
+                    Observer<ModuleEntity> {
+                        populateWebView(it)
+                    })
+            }
         }
     }
 
     private fun populateWebView(content: ModuleEntity?) {
-        webView.loadData(content?.contentEntity?.content,"text/html","UTF-8")
+        webView.loadData(content?.contentEntity?.content, "text/html", "UTF-8")
     }
 }

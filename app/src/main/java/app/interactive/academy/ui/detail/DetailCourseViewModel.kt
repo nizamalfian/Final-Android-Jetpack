@@ -1,5 +1,6 @@
 package app.interactive.academy.ui.detail
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import app.interactive.academy.data.AcademyRepository
 import app.interactive.academy.data.source.local.entity.CourseEntity
@@ -15,11 +16,11 @@ import app.interactive.academy.utils.generateDummyModules
 class DetailCourseViewModel(private val academyRepository: AcademyRepository):ViewModel() {
     var courseId:String?=null
 
-    fun getCourse(): CourseEntity?{
+    fun getCourse(): MutableLiveData<CourseEntity>{
         return academyRepository.getCourseWithModule(courseId?:"")
     }
 
-    fun getModules():List<ModuleEntity> = academyRepository.getAllModulesByCourse(courseId?:"")
+    fun getModules():MutableLiveData<ArrayList<ModuleEntity>> = academyRepository.getAllModulesByCourse(courseId?:"")
 
     /*fun getCourse(): CourseEntity?{
         generateDummyCourses().forEach {
