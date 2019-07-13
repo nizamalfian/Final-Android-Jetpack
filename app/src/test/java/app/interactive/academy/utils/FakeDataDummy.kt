@@ -1,6 +1,7 @@
 package app.interactive.academy.utils
 
 import app.interactive.academy.data.source.local.entity.CourseEntity
+import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.data.source.remote.response.ContentResponse
 import app.interactive.academy.data.source.remote.response.ModuleResponse
 
@@ -58,35 +59,35 @@ fun generateDummyCoursesUnitTest():ArrayList<CourseEntity>{
     }
 }
 
-fun generateRemoteDummyModulesUnitTest(courseId:String):ArrayList<ModuleResponse>{
-    return ArrayList<ModuleResponse>().apply{
-        add(ModuleResponse(String.format("%sm1", courseId),
+fun generateRemoteDummyModulesUnitTest(courseId:String):ArrayList<ModuleEntity>{
+    return ArrayList<ModuleEntity>().apply{
+        add(ModuleEntity(String.format("%sm1", courseId),
         courseId,
         "Modul 0 : Introduction",
         0))
-        add(ModuleResponse(String.format("%sm2", courseId),
+        add(ModuleEntity(String.format("%sm2", courseId),
             courseId,
             "Modul 1 : Teori 1",
             1))
-        add(ModuleResponse(String.format("%sm3", courseId),
+        add(ModuleEntity(String.format("%sm3", courseId),
             courseId,
             "Latihan 1",
             2))
-        add(ModuleResponse(String.format("%sm4", courseId),
+        add(ModuleEntity(String.format("%sm4", courseId),
             courseId,
             "Bedah Kode 1",
             3))
-        add(ModuleResponse(String.format("%sm5", courseId),
+        add(ModuleEntity(String.format("%sm5", courseId),
             courseId,
             "Modul 2 : Teori 2",
             4))
 
-        add(ModuleResponse(String.format("%sm6", courseId),
+        add(ModuleEntity(String.format("%sm6", courseId),
             courseId,
             "Latihan 2",
             4))
 
-        add(ModuleResponse(String.format("%sm7", courseId),
+        add(ModuleEntity(String.format("%sm7", courseId),
             courseId,
             "Bedah Kode 2",
             4))
