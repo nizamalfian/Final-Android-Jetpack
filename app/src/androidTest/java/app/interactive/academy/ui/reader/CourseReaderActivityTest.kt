@@ -12,12 +12,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import app.interactive.academy.R
 import app.utils.RecyclerViewItemCountAssertion
 import androidx.recyclerview.widget.RecyclerView.ViewHolder as ViewHolder
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import app.interactive.academy.data.dummy.generateDummyCourses
+import app.interactive.academy.utils.EspressoIdlingResource
+import org.junit.After
 
 /**
  * Created by nizamalfian on 01/07/2019.
@@ -38,6 +41,12 @@ class CourseReaderActivityTest {
 
     @Before
     fun setUp() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getEspressoIdlingResourceForMainActivity())
+    }
+
+    @After
+    fun tearDown(){
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getEspressoIdlingResourceForMainActivity())
     }
 
     @Test

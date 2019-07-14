@@ -10,8 +10,12 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import app.interactive.academy.R
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import app.interactive.academy.utils.EspressoIdlingResource
+import org.junit.After
+import org.junit.Before
 
 /**
  * Created by nizamalfian on 01/07/2019.
@@ -19,6 +23,16 @@ import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 class AcademyTest {
     @get:Rule
     val activityRule=ActivityTestRule(HomeActivity::class.java)
+
+    @Before
+    fun setUp(){
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getEspressoIdlingResourceForMainActivity())
+    }
+
+    @After
+    fun tearDown(){
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getEspressoIdlingResourceForMainActivity())
+    }
 
     @Test
     fun toDetailActivityTest(){

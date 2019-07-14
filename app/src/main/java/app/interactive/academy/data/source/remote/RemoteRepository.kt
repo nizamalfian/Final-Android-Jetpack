@@ -4,7 +4,7 @@ import android.os.Handler
 import app.interactive.academy.data.source.remote.response.ContentResponse
 import app.interactive.academy.data.source.remote.response.CourseResponse
 import app.interactive.academy.data.source.remote.response.ModuleResponse
-
+import app.interactive.academy.utils.EspressoIdlingResource
 
 
 /**
@@ -25,15 +25,27 @@ class RemoteRepository(private val jsonHelper: JSONHelper) {
     }
 
     fun getAllCourses(callback: LoadCoursesCallback) {
-        Handler().postDelayed({ callback.onAllCoursesReceived(jsonHelper.loadCourses()) }, SERVICE_LATENCY_IN_MILLIS)
+        EspressoIdlingResource.increment()
+        Handler().postDelayed({
+            callback.onAllCoursesReceived(jsonHelper.loadCourses())
+            EspressoIdlingResource.decrement()
+        }, SERVICE_LATENCY_IN_MILLIS)
     }
 
     fun getModules(courseId: String, callback: LoadModulesCallback) {
-        Handler().postDelayed({callback.onAllModulesReceived(jsonHelper.loadModule(courseId))},SERVICE_LATENCY_IN_MILLIS)
+        EspressoIdlingResource.increment()
+        Handler().postDelayed({
+            callback.onAllModulesReceived(jsonHelper.loadModule(courseId))
+            EspressoIdlingResource.decrement()
+        },SERVICE_LATENCY_IN_MILLIS)
     }
 
     fun getContent(moduleId:String,callback:GetContentCallback){
-        Handler().postDelayed({callback.onContentReceived(jsonHelper.loadContent(moduleId) as ContentResponse)},SERVICE_LATENCY_IN_MILLIS)
+        EspressoIdlingResource.increment()
+        Handler().postDelayed({
+            callback.onContentReceived(jsonHelper.loadContent(moduleId) as ContentResponse)
+            EspressoIdlingResource.decrement()
+        },SERVICE_LATENCY_IN_MILLIS)
     }
 
     fun getAllCourses(): List<CourseResponse> = jsonHelper.loadCourses()

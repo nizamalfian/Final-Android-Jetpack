@@ -9,13 +9,16 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.junit.Rule
 import android.content.Intent
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Test
 import app.interactive.academy.R
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import app.interactive.academy.data.dummy.generateDummyCourses
+import app.interactive.academy.utils.EspressoIdlingResource
 import app.utils.RecyclerViewItemCountAssertion
+import org.junit.After
 
 
 /**
@@ -38,6 +41,12 @@ class DetailCourseActivityTest {
 
     @Before
     fun setUp() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getEspressoIdlingResourceForMainActivity())
+    }
+
+    @After
+    fun tearDown(){
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getEspressoIdlingResourceForMainActivity())
     }
 
     @Test

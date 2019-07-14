@@ -1,6 +1,7 @@
 package app.interactive.academy.ui.bookmark
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.rule.ActivityTestRule
 import app.interactive.academy.testing.SingleFragmentActivity
 import org.junit.Before
@@ -12,7 +13,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import app.interactive.academy.R
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import app.interactive.academy.utils.EspressoIdlingResource
 import app.utils.RecyclerViewItemCountAssertion
+import org.junit.After
 
 /**
  * Created by nizamalfian on 01/07/2019.
@@ -25,8 +28,14 @@ class BookmarkFragmentTest {
 
     @Before
     fun setUp() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getEspressoIdlingResourceForMainActivity())
         bookmarkFragment=BookmarkFragment()
         activityRule.activity.setFragment(bookmarkFragment)
+    }
+
+    @After
+    fun tearDown(){
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getEspressoIdlingResourceForMainActivity())
     }
 
     @Test
