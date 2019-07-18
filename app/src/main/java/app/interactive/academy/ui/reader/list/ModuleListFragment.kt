@@ -67,8 +67,8 @@ class ModuleListFragment : Fragment() {
             viewModel=ViewModelProviders.of(it,ViewModelFactory.getInstance(it.application)).get(CourseReaderViewModel::class.java).also{
                 it.getModules().observe(this,
                     Observer<ArrayList<ModuleEntity>>{
-                        progressBar.gone()
                         populateRecyclerView(it)
+                        progressBar.gone()
                     })
             }
         }
@@ -90,6 +90,5 @@ class ModuleListFragment : Fragment() {
             }
             addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
         }
-        progressBar.gone()
     }
 }

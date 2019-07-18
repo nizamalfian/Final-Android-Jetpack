@@ -16,6 +16,7 @@ import app.interactive.academy.R
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.ui.reader.CourseReaderViewModel
 import app.interactive.academy.ui.viewmodel.ViewModelFactory
+import app.interactive.academy.utils.gone
 
 /**
  * A simple [Fragment] subclass.
@@ -57,17 +58,18 @@ class ModuleContentFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.run {
-            viewModel = ViewModelProviders.of(this, ViewModelFactory.getInstance(application))
-                .get(CourseReaderViewModel::class.java).also {
-                it.getSelectedModule().observe(this,
-                    Observer<ModuleEntity> {
-                        populateWebView(it)
-                    })
-            }
+            viewModel = ViewModelProviders.of(this, ViewModelFactory.getInstance(application)).get(CourseReaderViewModel::class.java)
+            viewModel.getSelectedModule().observe(this,
+                Observer<ModuleEntity> {
+                    populateWebView(it)
+                })
         }
     }
 
     private fun populateWebView(content: ModuleEntity?) {
-        webView.loadData(content?.contentEntity?.content, "text/html", "UTF-8")
+        content?.let{
+            webView.loadData(it.contentEntity?.content, "text/html", "UTF-8")
+            progressBar.gone()
+        }
     }
 }

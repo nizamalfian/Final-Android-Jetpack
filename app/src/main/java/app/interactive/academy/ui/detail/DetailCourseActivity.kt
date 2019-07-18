@@ -76,9 +76,9 @@ class DetailCourseActivity : AppCompatActivity() {
                     viewModel.courseId=it
                     viewModel.getModules().observe(this@DetailCourseActivity,
                         Observer<ArrayList<ModuleEntity>>{
-                            progressBar.gone()
                             modules=it.also{
                                 updateData(it)
+                                progressBar.gone()
                             }
                         })
 //                    modules=viewModel.getModules()

@@ -7,7 +7,9 @@ import app.interactive.academy.data.source.local.entity.ContentEntity
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.data.source.remote.RemoteRepository
+import app.interactive.academy.data.source.remote.response.ContentResponse
 import app.interactive.academy.data.source.remote.response.CourseResponse
+import app.interactive.academy.data.source.remote.response.ModuleResponse
 
 /**
  * Created by L
@@ -59,23 +61,6 @@ class AcademyRepository(private val localRepository: LocalRepository, private va
 
             return courseResults
         }
-        /*return MutableLiveData<ArrayList<CourseEntity>>().also{
-            it.postValue(
-                ArrayList<CourseEntity>().also {
-                    remoteRepository.getAllCourses().forEach { course ->
-                        it.add(
-                            CourseEntity(
-                                course.id,
-                                course.title,
-                                course.description,
-                                course.date,
-                                course.imagePath
-                            )
-                        )
-                    }
-                }
-            )
-        }*/
     }
 
     override fun getCourseWithModule(courseId: String): MutableLiveData<CourseEntity> {
@@ -100,78 +85,82 @@ class AcademyRepository(private val localRepository: LocalRepository, private va
                 }
             })
         }
-        /*return MutableLiveData<CourseEntity>().also{result->
-            remoteRepository.getAllCourses().forEach {
-                if (it.id == courseId) {
-                    result.postValue(CourseEntity(
-                        it.id,
-                        it.title,
-                        it.description,
-                        it.date,
-                        it.imagePath
-                    ))
-                }
-            }
-        }*/
     }
 
     override fun getAllModulesByCourse(courseId: String): MutableLiveData<ArrayList<ModuleEntity>> {
-        return MutableLiveData<ArrayList<ModuleEntity>>().also{
-            it.postValue(
-                ArrayList<ModuleEntity>().also {
-                    remoteRepository.getAllModules(courseId).forEach { module ->
-                        it.add(
-                            ModuleEntity(
-                                module.moduleId,
-                                module.courseId,
-                                module.title,
-                                module.position
+        return MutableLiveData<ArrayList<ModuleEntity>>().also{moduleResult->
+            remoteRepository.getModules(courseId,object:RemoteRepository.LoadModulesCallback{
+                override fun onAllModulesReceived(moduleResponses: List<ModuleResponse>) {
+                    ArrayList<ModuleEntity>().also{moduleList->
+                        moduleResponses.forEach {
+                            moduleList.add(
+                                ModuleEntity(
+                                    it.moduleId,
+                                    it.courseId,
+                                    it.title,
+                                    it.position
+                                )
                             )
-                        )
+                        }
+                        moduleResult.postValue(moduleList)
                     }
-                })
+                }
+
+                override fun onDataNotAvailable() {}
+            })
         }
     }
 
     override fun getBookmarkedCourses(): MutableLiveData<ArrayList<CourseEntity>> {
-        /*return MutableLiveData<ArrayList<CourseEntity>>().also{
-
-        }*/
-        return MutableLiveData<ArrayList<CourseEntity>>().also {
-            it.postValue(
-                ArrayList<CourseEntity>().also {
-                    remoteRepository.getAllCourses().forEach { course ->
-                        it.add(
-                            CourseEntity(
-                                course.id,
-                                course.title,
-                                course.description,
-                                course.date,
-                                course.imagePath
+        return MutableLiveData<ArrayList<CourseEntity>>().also{courseResult->
+            remoteRepository.getAllCourses(object:RemoteRepository.LoadCoursesCallback{
+                override fun onAllCoursesReceived(courseResponses: List<CourseResponse>) {
+                    ArrayList<CourseEntity>().also{courseList->
+                        courseResponses.forEach{
+                            courseList.add(
+                                CourseEntity(
+                                    it.id,
+                                    it.title,
+                                    it.description,
+                                    it.date,
+                                    it.imagePath
+                                )
                             )
-                        )
+                        }
+                        courseResult.postValue(courseList)
                     }
-                })
+                }
+
+                override fun onDataNotAvailable() {
+
+                }
+            })
         }
     }
 
     override fun getContent(courseId: String, moduleId: String): MutableLiveData<ModuleEntity> {
-        return MutableLiveData<ModuleEntity>().also{result->
-            remoteRepository.getAllModules(courseId).forEach {
-                if (it.moduleId == moduleId) {
-                    result.postValue(ModuleEntity(
-                        it.moduleId,
-                        it.courseId,
-                        it.title,
-                        it.position,
-                        remoteRepository.getContent(moduleId)?.content?.let { content ->
-                            ContentEntity(
-                                content
-                            )
+        return MutableLiveData<ModuleEntity>().also{moduleResult->
+            remoteRepository.getModules(courseId,object:RemoteRepository.LoadModulesCallback{
+                override fun onAllModulesReceived(moduleResponses: List<ModuleResponse>) {
+                    for(it in moduleResponses){
+                        val id=it.moduleId
+                        if(id==moduleId){
+                            var module = ModuleEntity(id,it.courseId,it.title,it.position)
+                            remoteRepository.getContent(id,object:RemoteRepository.GetContentCallback{
+                                override fun onContentReceived(contentResponse: ContentResponse) {
+                                    module=module.copy(contentEntity=ContentEntity(contentResponse.content))
+                                    moduleResult.postValue(module)
+                                }
+
+                                override fun onDataNotAvailable() {}
+                            })
                         }
-                    ))
+                        break
+                    }
                 }
-            }
+
+                override fun onDataNotAvailable() {}
+            })
         }
     }
 }

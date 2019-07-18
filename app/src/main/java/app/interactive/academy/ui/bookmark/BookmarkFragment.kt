@@ -94,8 +94,8 @@ class BookmarkFragment : Fragment() {
 
         viewModel.getBookmarks().observe(this,
             Observer<ArrayList<CourseEntity>> { courses ->
-                progressBar.gone()
                 adapter.updateData(courses)
+                progressBar.gone()
             })
     }
 

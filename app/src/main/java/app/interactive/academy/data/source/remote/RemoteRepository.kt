@@ -48,12 +48,6 @@ class RemoteRepository(private val jsonHelper: JSONHelper) {
         },SERVICE_LATENCY_IN_MILLIS)
     }
 
-    fun getAllCourses(): List<CourseResponse> = jsonHelper.loadCourses()
-
-    fun getAllModules(courseId: String): List<ModuleResponse> = jsonHelper.loadModule(courseId)
-
-    fun getContent(moduleId: String): ContentResponse? = jsonHelper.loadContent(moduleId)
-
     interface LoadCoursesCallback {
         fun onAllCoursesReceived(courseResponses: List<CourseResponse>)
 

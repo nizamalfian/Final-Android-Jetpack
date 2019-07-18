@@ -6,8 +6,10 @@ import app.interactive.academy.data.dummy.generateRemoteModules
 import app.interactive.academy.data.dummy.getRemoteContent
 import app.interactive.academy.data.source.local.LocalRepository
 import app.interactive.academy.data.source.remote.RemoteRepository
+import app.interactive.academy.utils.LiveDataTestUtil
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.*
@@ -31,14 +33,71 @@ class AcademyRepositoryTest{
 
     @Test
     fun testGetAllCourses(){
-        `when`(remote.getAllCourses()).thenReturn(courseResponses)
-        val courseEntities=academyRepository.getAllCourses()
-        verify(remote).getAllCourses()
-        assertNotNull(courseEntities)
-//        assertEquals(courseResponses.size,courseEntities.size)
+        doAnswer{invocation ->
+            val callback=(invocation.arguments[0] as RemoteRepository.LoadCoursesCallback)
+            callback.onAllCoursesReceived(courseResponses)
+            null
+        }.`when`(remote).getAllCourses(anyOrNull())
+        val courseEntities=LiveDataTestUtil.getValue(academyRepository.getAllCourses())
+        verify(remote,times(1)).getAllCourses(anyOrNull())
+        assertEquals(courseResponses.size,courseEntities.size)
     }
 
     @Test
+    fun testGetllAllModulesByCourse(){
+        doAnswer{invocation ->
+            val callback=(invocation.arguments[1] as RemoteRepository.LoadModulesCallback)
+            callback.onAllModulesReceived(moduleResponses)
+            null
+        }.`when`(remote).getModules(eq(courseId),anyOrNull())
+        val result=LiveDataTestUtil.getValue(academyRepository.getAllModulesByCourse(courseId))
+        verify(remote,times(1)).getModules(eq(courseId),anyOrNull())
+        assertEquals(moduleResponses.size,result.size)
+    }
+
+    @Test
+    fun getBookmarkCourses(){
+        doAnswer{invocation->
+            val callback=(invocation.arguments[0] as RemoteRepository.LoadCoursesCallback)
+            callback.onAllCoursesReceived(courseResponses)
+            null
+        }.`when`(remote).getAllCourses(anyOrNull())
+        val result=LiveDataTestUtil.getValue(academyRepository.getBookmarkedCourses())
+        verify(remote,times(1)).getAllCourses(anyOrNull())
+        assertEquals(courseResponses.size,result.size)
+    }
+
+    @Test
+    fun testGetContent(){
+        doAnswer{invocation->
+            val callback=(invocation.arguments[1] as RemoteRepository.LoadModulesCallback)
+            callback.onAllModulesReceived(moduleResponses)
+            null
+        }.`when`(remote).getModules(eq(courseId), anyOrNull())
+        doAnswer{invocation->
+            val callback=(invocation.arguments[1] as RemoteRepository.GetContentCallback)
+            callback.onContentReceived(content)
+            null
+        }.`when`(remote).getContent(eq(moduleId), anyOrNull())
+        val contentResult=LiveDataTestUtil.getValue(academyRepository.getContent(courseId,moduleId))
+        verify(remote,times(1)).getModules(eq(courseId), anyOrNull())
+        verify(remote,times(1)).getContent(eq(moduleId), anyOrNull())
+        assertEquals(content.content,contentResult.contentEntity?.content)
+    }
+
+    @Test
+    fun testGetCourseWithModules(){
+        doAnswer{invocation->
+            val callback=(invocation.arguments[0] as RemoteRepository.LoadCoursesCallback)
+            callback.onAllCoursesReceived(courseResponses)
+            null
+        }.`when`(remote).getAllCourses(anyOrNull())
+        val courseResults=LiveDataTestUtil.getValue(academyRepository.getCourseWithModule(eq(courseId)))
+        verify(remote,times(1)).getAllCourses(anyOrNull())
+        assertEquals(courseResponses[0].title,courseResults.title)
+    }
+
+    /*@Test
     fun testetAllModulesByCourse(){
         `when`(remote.getAllModules(courseId)).thenReturn(moduleResponses)
         val modules=academyRepository.getAllModulesByCourse(courseId)
@@ -73,5 +132,5 @@ class AcademyRepositoryTest{
         verify(remote).getAllCourses()
         assertNotNull(resultCourse)
 //        assertEquals(courseResponses[0].title,resultCourse?.title)
-    }
+    }*/
 }

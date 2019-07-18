@@ -78,9 +78,9 @@ class AcademyFragment : Fragment() {
             viewModel.also { vm ->
                 vm.getCourses().observe(this,
                     Observer<ArrayList<CourseEntity>> { courses ->
-                        progressBar.gone()
                         this@AcademyFragment.courses = courses
                         adapter.updateData(courses)
+                        progressBar.gone()
                     })
             }
         }
