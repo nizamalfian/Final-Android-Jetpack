@@ -7,6 +7,7 @@ import app.interactive.academy.data.source.local.entity.ContentEntity
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.data.source.remote.RemoteRepository
+import app.interactive.academy.data.source.remote.response.CourseResponse
 
 /**
  * Created by L
@@ -15,6 +16,7 @@ import app.interactive.academy.data.source.remote.RemoteRepository
  */
 class AcademyRepository(private val localRepository: LocalRepository, private val remoteRepository: RemoteRepository) :
     AcademyDataSource {
+    val courseResults = MutableLiveData<ArrayList<CourseEntity>>()
 
     companion object {
         private var INSTANCE: AcademyRepository?=null
@@ -34,6 +36,30 @@ class AcademyRepository(private val localRepository: LocalRepository, private va
 
     override fun getAllCourses(): LiveData<ArrayList<CourseEntity>> {
         return MutableLiveData<ArrayList<CourseEntity>>().also{
+            remoteRepository.getAllCourses(object:RemoteRepository.LoadCoursesCallback{
+                override fun onAllCoursesReceived(courseResponses: List<CourseResponse>) {
+                    val courseList=ArrayList<CourseEntity>().also{courseLists->
+                        courseResponses.forEach {
+                            courseLists.add(CourseEntity(
+                                it.id,
+                                it.title,
+                                it.description,
+                                it.date,
+                                it.imagePath
+                            ))
+                        }
+                    }
+                    courseResults.postValue(courseList)
+                }
+
+                override fun onDataNotAvailable() {
+
+                }
+            })
+
+            return courseResults
+        }
+        /*return MutableLiveData<ArrayList<CourseEntity>>().also{
             it.postValue(
                 ArrayList<CourseEntity>().also {
                     remoteRepository.getAllCourses().forEach { course ->
@@ -49,11 +75,32 @@ class AcademyRepository(private val localRepository: LocalRepository, private va
                     }
                 }
             )
-        }
+        }*/
     }
 
     override fun getCourseWithModule(courseId: String): MutableLiveData<CourseEntity> {
-        return MutableLiveData<CourseEntity>().also{result->
+        return MutableLiveData<CourseEntity>().also {result->
+            remoteRepository.getAllCourses(object : RemoteRepository.LoadCoursesCallback{
+                override fun onAllCoursesReceived(courseResponses: List<CourseResponse>) {
+                    courseResponses.forEach {
+                        if(it.id==courseId){
+                            result.postValue(CourseEntity(
+                                it.id,
+                                it.title,
+                                it.description,
+                                it.date,
+                                it.imagePath
+                            ))
+                        }
+                    }
+                }
+
+                override fun onDataNotAvailable() {
+
+                }
+            })
+        }
+        /*return MutableLiveData<CourseEntity>().also{result->
             remoteRepository.getAllCourses().forEach {
                 if (it.id == courseId) {
                     result.postValue(CourseEntity(
@@ -65,7 +112,7 @@ class AcademyRepository(private val localRepository: LocalRepository, private va
                     ))
                 }
             }
-        }
+        }*/
     }
 
     override fun getAllModulesByCourse(courseId: String): MutableLiveData<ArrayList<ModuleEntity>> {
@@ -87,6 +134,9 @@ class AcademyRepository(private val localRepository: LocalRepository, private va
     }
 
     override fun getBookmarkedCourses(): MutableLiveData<ArrayList<CourseEntity>> {
+        /*return MutableLiveData<ArrayList<CourseEntity>>().also{
+
+        }*/
         return MutableLiveData<ArrayList<CourseEntity>>().also {
             it.postValue(
                 ArrayList<CourseEntity>().also {
