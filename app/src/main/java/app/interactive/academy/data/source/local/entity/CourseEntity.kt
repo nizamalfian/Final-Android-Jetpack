@@ -1,15 +1,19 @@
 package app.interactive.academy.data.source.local.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 /**
  * Created by L
  *
  * on 6/26/2019
  */
+@Entity
 data class CourseEntity(
-    val courseId:String,
-    val title:String,
-    val description:String,
-    val deadline:String,
-    val imagePath:String,
-    val bookmarked:Boolean?=null
+    @PrimaryKey var courseId:String="",
+    var title:String="",
+    var description:String="",
+    var deadline:String="",
+    var imagePath:String="",
+    var bookmarked:Boolean=false
 )

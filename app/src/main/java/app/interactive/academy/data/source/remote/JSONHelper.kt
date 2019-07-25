@@ -25,7 +25,7 @@ class JSONHelper(private val application: Application){
                     result=String(this)
                 }
             }
-        }catch (e:IOException){
+        }catch (e:Throwable){
             e.printStackTrace()
             Log.e("parsingg",e.message)
         }finally {
