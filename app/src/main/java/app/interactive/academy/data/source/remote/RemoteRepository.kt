@@ -1,6 +1,8 @@
 package app.interactive.academy.data.source.remote
 
 import android.os.Handler
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import app.interactive.academy.data.source.remote.response.ContentResponse
 import app.interactive.academy.data.source.remote.response.CourseResponse
 import app.interactive.academy.data.source.remote.response.ModuleResponse
@@ -24,28 +26,34 @@ class RemoteRepository(private val jsonHelper: JSONHelper) {
         }
     }
 
-    fun getAllCourses(callback: LoadCoursesCallback) {
+    fun getAllCoursesAsLiveData():LiveData<ApiResponse<List<CourseResponse>>> {
         EspressoIdlingResource.increment()
+        val resultCourse = MutableLiveData<ApiResponse<List<CourseResponse>>>()
         Handler().postDelayed({
-            callback.onAllCoursesReceived(jsonHelper.loadCourses())
+            resultCourse.value=ApiResponse.success(jsonHelper.loadCourses())
             EspressoIdlingResource.decrement()
         }, SERVICE_LATENCY_IN_MILLIS)
+        return resultCourse
     }
 
-    fun getModules(courseId: String, callback: LoadModulesCallback) {
+    fun getAllModulesByCourseAsLiveData(courseId: String):LiveData<ApiResponse<List<ModuleResponse>>>{
         EspressoIdlingResource.increment()
+        val resultModules = MutableLiveData<ApiResponse<List<ModuleResponse>>>()
         Handler().postDelayed({
-            callback.onAllModulesReceived(jsonHelper.loadModule(courseId))
+            resultModules.value=ApiResponse.success(jsonHelper.loadModule(courseId))
             EspressoIdlingResource.decrement()
         },SERVICE_LATENCY_IN_MILLIS)
+        return resultModules
     }
 
-    fun getContent(moduleId:String,callback:GetContentCallback){
+    fun getContentAsLiveData(moduleId:String):LiveData<ApiResponse<ContentResponse?>>{
         EspressoIdlingResource.increment()
+        val resultContent = MutableLiveData<ApiResponse<ContentResponse?>>()
         Handler().postDelayed({
-            callback.onContentReceived(jsonHelper.loadContent(moduleId) as ContentResponse)
+            resultContent.value= ApiResponse.success(jsonHelper.loadContent(moduleId))
             EspressoIdlingResource.decrement()
         },SERVICE_LATENCY_IN_MILLIS)
+        return resultContent
     }
 
     interface LoadCoursesCallback {
