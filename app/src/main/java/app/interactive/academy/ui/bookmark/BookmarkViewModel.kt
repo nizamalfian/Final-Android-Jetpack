@@ -15,4 +15,9 @@ import app.interactive.academy.utils.generateDummyCourses
  */
 class BookmarkViewModel(private val academyRepository: AcademyRepository):ViewModel() {
     fun getBookmarks():LiveData<Resource<List<CourseEntity>>> = academyRepository.getBookmarkedCourses()
+
+    fun setBookmark(courseEntity:CourseEntity){
+        val newState=!courseEntity.isBookmarked
+        academyRepository.setCourseBookmark(courseEntity,newState)
+    }
 }

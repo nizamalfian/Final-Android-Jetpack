@@ -30,7 +30,7 @@ class ModuleListAdapter(private val onItemClicked:(position:Int,moduleId:String)
         if(holder.itemViewType==0){
             val moduleViewHolderHide = holder as ViewHolderHide
             moduleViewHolderHide.bind(module.title)
-        }else if(holder.itemViewType==0){
+        }else{
             val viewHolder = holder as ViewHolder
             viewHolder.bind(module.title)
             viewHolder.itemView.setOnClickListener {
@@ -41,9 +41,9 @@ class ModuleListAdapter(private val onItemClicked:(position:Int,moduleId:String)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if(viewType==0)
-            ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.items_module_list_custom_disable,parent,false))
+            ViewHolderHide(LayoutInflater.from(parent.context).inflate(R.layout.items_module_list_custom_disable,parent,false))
         else{
-            ViewHolderHide(LayoutInflater.from(parent.context).inflate(R.layout.items_module_list_custom,parent,false))
+            ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.items_module_list_custom,parent,false))
         }
     }
 

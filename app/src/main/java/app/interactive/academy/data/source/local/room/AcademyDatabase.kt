@@ -17,10 +17,10 @@ import app.interactive.academy.data.source.local.entity.ModuleEntity
 abstract class AcademyDatabase : RoomDatabase(){
     abstract fun academyDao():AcademyDao
     companion object{
-        private var INSTANCE:AcademyDatabase?=null
+        @Volatile private var INSTANCE:AcademyDatabase?=null
         private val sLock = Any()
         fun getInstance(context:Context):AcademyDatabase{
-            synchronized(sLock){
+            synchronized(AcademyDatabase::class.java){
                 if(INSTANCE==null){
                     INSTANCE=Room.databaseBuilder(context.applicationContext,
                         AcademyDatabase::class.java,"Academies.db")

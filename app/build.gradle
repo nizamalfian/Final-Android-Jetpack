@@ -1,9 +1,7 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-
 android {
     compileSdkVersion 28
     buildToolsVersion "29.0.0"
@@ -51,9 +49,9 @@ dependencies {
 
     // Dependencies for Architecture Component
     implementation "androidx.room:room-runtime:$roomVersion"
-    annotationProcessor "androidx.room:room-compiler:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
-    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
 
     // Dependencies for Paging
     implementation "androidx.paging:paging-runtime:$pagingVersion"

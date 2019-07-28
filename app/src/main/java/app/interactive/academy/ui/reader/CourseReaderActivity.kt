@@ -4,14 +4,29 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import app.interactive.academy.R
+import app.interactive.academy.data.source.local.entity.ModuleEntity
+import app.interactive.academy.data.source.vo.Resource
+import app.interactive.academy.data.source.vo.Status
 import app.interactive.academy.ui.detail.CourseReaderCallback
 import app.interactive.academy.ui.reader.content.ModuleContentFragment
 import app.interactive.academy.ui.reader.list.ModuleListFragment
 import app.interactive.academy.ui.viewmodel.ViewModelFactory
+import app.interactive.academy.data.source.vo.Status.*
 
 class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
+    private val initObserver: Observer<Resource<List<ModuleEntity>>> = Observer {modules->
+        modules?.let{
+            when(it.status){
+                LOADING -> {}
+                SUCCESS -> {
+
+                }
+            }
+        }
+    }
     private lateinit var viewModel: CourseReaderViewModel
 
     companion object {
@@ -33,8 +48,10 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
         setContentView(R.layout.activity_course_reader)
         viewModel=ViewModelProviders.of(this,ViewModelFactory.getInstance(application)).get(CourseReaderViewModel::class.java)
 
+        viewModel.modules.observe(this,initObserver)
+
         intent?.extras?.getString(EXTRA_COURSE_ID)?.let{
-            viewModel.courseId=it
+            viewModel.setCourseId(it)
             populateFragment()
         }
     }

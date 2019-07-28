@@ -2,6 +2,7 @@ package app.interactive.academy.ui.reader.content
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -115,6 +116,7 @@ class ModuleContentFragment : Fragment() {
     }
 
     private fun populateWebView(content: ContentEntity?) {
+        Log.d("asdfadf-populateWebview"," -- "+content?.content)
         content?.let{
             webView.loadData(it.content, "text/html", "UTF-8")
             progressBar.gone()
