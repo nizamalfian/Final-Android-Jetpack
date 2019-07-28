@@ -5,7 +5,7 @@ import app.interactive.academy.data.source.vo.Status.*
 /**
  * Created by nizamalfian on 26/07/2019.
  */
-data class Resource<T>(private val status:Status,private val data:T?,private val message:String?) {
+data class Resource<T>(val status:Status,val data:T?,private val message:String?) {
     companion object{
         fun <T>success(data:T):Resource<T> = Resource(SUCCESS,data,null)
         fun <T>error(msg:String,data:T):Resource<T> = Resource(ERROR,data,msg)

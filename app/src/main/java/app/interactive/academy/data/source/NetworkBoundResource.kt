@@ -32,31 +32,33 @@ abstract class NetworkBoundResource<ResultType,RequestType>(private val appExecu
 
     protected abstract fun shouldFetch(data:ResultType):Boolean
 
-    protected abstract fun createCall():LiveData<ApiResponse<RequestType>>
+    protected abstract fun createCall():LiveData<ApiResponse<RequestType>>?
 
     protected abstract fun saveCallResult(data:RequestType)
 
     private fun fetchFromNetwork(dbSource:LiveData<ResultType>){
-        val apiResponse = createCall()
+        val apiResponse:LiveData<ApiResponse<RequestType>>? = createCall()
         result.addSource(dbSource){newData->result.value=Resource.loading(newData)}
-        result.addSource(apiResponse){response->
-            result.removeSource(apiResponse)
-            result.removeSource(dbSource)
-            when(response.status){
-                SUCCESS->{
-                    appExecutor.diskIO.execute{
-                        saveCallResult(response.body)
-                        appExecutor.mainThread.execute{
-                            result.addSource(loadFromDB()){newData-> result.value=Resource.success(newData) }
+        apiResponse?.let{
+            result.addSource(it){response->
+                result.removeSource(it)
+                result.removeSource(dbSource)
+                when(response.status){
+                    SUCCESS->{
+                        appExecutor.diskIO.execute{
+                            saveCallResult(response.body)
+                            appExecutor.mainThread.execute{
+                                result.addSource(loadFromDB()){newData-> result.value=Resource.success(newData) }
+                            }
                         }
                     }
-                }
-                EMPTY->{
-                    appExecutor.mainThread.execute{result.addSource(loadFromDB()) { newData->result.value=Resource.success(newData)} }
-                }
-                ERROR->{
-                    onFetchFailed()
-                    result.addSource(dbSource){newData->result.value=Resource.error(response.message?:"",newData)}
+                    EMPTY->{
+                        appExecutor.mainThread.execute{result.addSource(loadFromDB()) { newData->result.value=Resource.success(newData)} }
+                    }
+                    ERROR->{
+                        onFetchFailed()
+                        result.addSource(dbSource){newData->result.value=Resource.error(response.message?:"",newData)}
+                    }
                 }
             }
         }

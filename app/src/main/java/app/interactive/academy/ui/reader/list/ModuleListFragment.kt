@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -17,11 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
 import app.interactive.academy.data.source.local.entity.ModuleEntity
+import app.interactive.academy.data.source.vo.Status
 import app.interactive.academy.ui.detail.CourseReaderCallback
 import app.interactive.academy.utils.gone
 import app.interactive.academy.ui.reader.CourseReaderViewModel
 import app.interactive.academy.ui.viewmodel.ViewModelFactory
 import java.util.ArrayList
+import app.interactive.academy.data.source.vo.Status.*
+import app.interactive.academy.utils.visible
 
 /**
  * A simple [Fragment] subclass.
@@ -65,11 +69,21 @@ class ModuleListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         activity?.let{
             viewModel=ViewModelProviders.of(it,ViewModelFactory.getInstance(it.application)).get(CourseReaderViewModel::class.java).also{
-                it.getModules().observe(this,
-                    Observer<ArrayList<ModuleEntity>>{
-                        populateRecyclerView(it)
-                        progressBar.gone()
-                    })
+                it.modules.observe(this@ModuleListFragment,Observer{
+                    if(it!=null){
+                        when(it.status){
+                            LOADING -> progressBar.visible()
+                            SUCCESS ->{
+                                populateRecyclerView(it.data)
+                                progressBar.gone()
+                            }
+                            ERROR->{
+                                Toast.makeText(activity,"Something error happened", Toast.LENGTH_SHORT).show()
+                                progressBar.gone()
+                            }
+                        }
+                    }
+                })
             }
         }
     }
@@ -79,14 +93,13 @@ class ModuleListFragment : Fragment() {
         callback=activity as CourseReaderCallback
     }
 
-    private fun populateRecyclerView(modules: ArrayList<ModuleEntity>) {
+    private fun populateRecyclerView(modules: List<ModuleEntity>?) {
         recyclerView.run{
             layoutManager=LinearLayoutManager(this@ModuleListFragment.context)
             adapter=ModuleListAdapter{ position, moduleId->
                 callback.moveTo(position,moduleId)
-                viewModel.moduleId=moduleId
             }.apply{
-                updateData(modules)
+                modules?.let{updateData(it)}
             }
             addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
         }

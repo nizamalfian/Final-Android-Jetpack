@@ -39,7 +39,7 @@ class LocalRepository(private val academyDao: AcademyDao) {
     }
 
     fun setCourseBookmark(course:CourseEntity,newState:Boolean){
-        course.bookmarked=newState
+        course.isBookmarked=newState
         academyDao.updateCourse(course)
     }
 
@@ -50,7 +50,7 @@ class LocalRepository(private val academyDao: AcademyDao) {
     }
 
     fun setReadModule(module:ModuleEntity){
-        module.read=true
+        module.isRead=true
         academyDao.updateModule(module)
     }
 }

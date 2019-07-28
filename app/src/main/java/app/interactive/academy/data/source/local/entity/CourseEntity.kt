@@ -15,5 +15,5 @@ data class CourseEntity(
     var description:String="",
     var deadline:String="",
     var imagePath:String="",
-    var bookmarked:Boolean=false
+    var isBookmarked:Boolean=false
 )

@@ -17,7 +17,7 @@ interface AcademyDao {
     fun getCourses():LiveData<List<CourseEntity>>
 
     @WorkerThread
-    @Query("SELECT * FROM CourseEntity where bookmarked = 1")
+    @Query("SELECT * FROM CourseEntity where isBookmarked = 1")
     fun getBookmarkedCourses():LiveData<List<CourseEntity>>
 
     @Transaction

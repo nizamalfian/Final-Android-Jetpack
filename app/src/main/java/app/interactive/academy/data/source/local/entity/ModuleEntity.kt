@@ -27,5 +27,5 @@ data class ModuleEntity(
     var title: String="",
     var position: Int=0,
     @Embedded var contentEntity: ContentEntity? = null,
-    var read: Boolean = false
+    var isRead: Boolean = false
 )

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
@@ -17,11 +18,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
-import app.interactive.academy.data.source.local.entity.ContentEntity
-import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.ui.detail.DetailCourseActivity
 import app.interactive.academy.ui.viewmodel.ViewModelFactory
 import app.interactive.academy.utils.gone
+import app.interactive.academy.data.source.vo.Status.*
+import app.interactive.academy.utils.visible
 
 /**
  * A simple [Fragment] subclass.
@@ -93,9 +94,20 @@ class BookmarkFragment : Fragment() {
         }
 
         viewModel.getBookmarks().observe(this,
-            Observer<ArrayList<CourseEntity>> { courses ->
-                adapter.updateData(courses)
-                progressBar.gone()
+            Observer{ courses ->
+                courses?.let{
+                    when(it.status){
+                        LOADING -> progressBar.visible()
+                        SUCCESS -> {
+                            adapter.updateData(courses.data)
+                            progressBar.gone()
+                        }
+                        ERROR -> {
+                            progressBar.gone()
+                            Toast.makeText(activity,"Something error happened",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             })
     }
 
