@@ -25,7 +25,6 @@ class AcademyRepository(
     private val remoteRepository: RemoteRepository,
     private val appExecutors: AppExecutors) :
     AcademyDataSource {
-    val courseResults = MutableLiveData<ArrayList<CourseEntity>>()
 
     companion object {
         private var INSTANCE: AcademyRepository?=null

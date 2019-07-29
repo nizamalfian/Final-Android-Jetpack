@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import app.interactive.academy.data.AcademyRepository
 import app.interactive.academy.data.dummy.generateDummyCourses
 import app.interactive.academy.data.source.local.entity.CourseEntity
+import app.interactive.academy.data.source.vo.Resource
 import app.interactive.academy.ui.bookmark.BookmarkViewModel
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -25,7 +26,7 @@ import org.mockito.Mockito.*
 class BookmarkViewModelTest {
 
     private lateinit var viewModel: BookmarkViewModel
-    private val academyRepository= Mockito.mock(AcademyRepository::class.java)
+    private val academyRepository= mock(AcademyRepository::class.java)
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -36,25 +37,13 @@ class BookmarkViewModelTest {
 
     @After
     fun tearDown(){}
-
-    /*@Test
-    fun getCourses(){
-        val courseEntities=viewModel.getBookmarks()
-        assertNotNull(courseEntities)
-        assertEquals(5,courseEntities.size)
-    }*/
     @Test
     fun testGetCourses(){
-        /*`when`(academyRepository.getBookmarkedCourses()).thenReturn(generateDummyCourses())
-        val courseEntities=viewModel.getBookmarks()
-        verify(academyRepository).getBookmarkedCourses()
-        assertNotNull(courseEntities)
-        assertEquals(5,courseEntities.size)*/
-        val courses=MutableLiveData<ArrayList<CourseEntity>>().also{
-            it.postValue(generateDummyCourses())
+        val courses=MutableLiveData<Resource<List<CourseEntity>>>().also{
+            it.value=Resource.success(generateDummyCourses())
         }
         `when`(academyRepository.getBookmarkedCourses()).thenReturn(courses)
-        val observer:Observer<ArrayList<CourseEntity>> = mock(Observer::class.java) as Observer<ArrayList<CourseEntity>>
+        val observer:Observer<Resource<List<CourseEntity>>> = mock(Observer::class.java) as Observer<Resource<List<CourseEntity>>>
         viewModel.getBookmarks().observeForever(observer)
         verify(academyRepository).getBookmarkedCourses()
     }

@@ -8,10 +8,11 @@ import java.util.concurrent.Executors
 /**
  * Created by nizamalfian on 26/07/2019.
  */
-class AppExecutors(
+open class AppExecutors(
     val diskIO:Executor = DiskIOThreadExecutor(),
     val networkIO:Executor = Executors.newFixedThreadPool(THREAD_COUNT),
     val mainThread:Executor = MainThreadExecutor()) {
+
     companion object{
         const val THREAD_COUNT=3
         private class MainThreadExecutor:Executor{

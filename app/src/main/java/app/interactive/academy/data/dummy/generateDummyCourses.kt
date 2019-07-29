@@ -124,7 +124,7 @@ fun generateRemoteModules(courseId:String):ArrayList<ModuleResponse>{
 fun getRemoteContent(moduleId:String): ContentResponse=
     ContentResponse(moduleId,"This is a dummy content")
 
-fun generateDummyCourses(): ArrayList<CourseEntity> {
+fun generateDummyCourses(): List<CourseEntity> {
     return ArrayList<CourseEntity>().apply {
         add(
             CourseEntity(

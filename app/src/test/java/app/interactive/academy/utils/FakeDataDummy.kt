@@ -1,6 +1,8 @@
 package app.interactive.academy.utils
 
+import app.interactive.academy.data.source.local.entity.ContentEntity
 import app.interactive.academy.data.source.local.entity.CourseEntity
+import app.interactive.academy.data.source.local.entity.CourseWithModule
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.data.source.remote.response.ContentResponse
 import app.interactive.academy.data.source.remote.response.ModuleResponse
@@ -9,6 +11,24 @@ import app.interactive.academy.data.source.remote.response.ModuleResponse
 /**
  * Created by nizamalfian on 08/07/2019.
  */
+fun getGenerateDummyCourseWithModules(course:CourseEntity,isBookmarked:Boolean):CourseWithModule{
+    course.isBookmarked=isBookmarked
+    return CourseWithModule(
+        course,
+        generateDummyModules(course.courseId)
+    )
+}
+
+fun getGenerateDummyContent(moduleId: String):ContentEntity{
+    return ContentEntity("This is dummy content")
+}
+
+fun generateDummyModulesWithContent(courseId: String):ModuleEntity{
+    val moduleEntity= generateDummyModules(courseId)[0]
+    moduleEntity.contentEntity=getGenerateDummyContent(moduleEntity.moduleId)
+    return moduleEntity
+}
+
 fun generateDummyCoursesUnitTest():ArrayList<CourseEntity>{
     return ArrayList<CourseEntity>().apply{
         add(

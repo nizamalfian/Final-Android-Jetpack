@@ -6,9 +6,12 @@ import androidx.lifecycle.Observer
 import app.interactive.academy.data.AcademyRepository
 import app.interactive.academy.data.dummy.generateDummyCourses
 import app.interactive.academy.data.source.local.entity.CourseEntity
+import app.interactive.academy.data.source.local.entity.CourseWithModule
 import app.interactive.academy.data.source.local.entity.ModuleEntity
+import app.interactive.academy.data.source.vo.Resource
 import app.interactive.academy.ui.detail.DetailCourseViewModel
 import app.interactive.academy.utils.generateRemoteDummyModulesUnitTest
+import app.interactive.academy.utils.getGenerateDummyCourseWithModules
 
 import org.junit.After
 import org.junit.Before
@@ -26,7 +29,7 @@ import org.mockito.Mockito.*
 class DetailCourseViewModelTest {
 
     private lateinit var viewModel: DetailCourseViewModel
-    private val academyRepository = Mockito.mock(AcademyRepository::class.java)
+    private val academyRepository = mock(AcademyRepository::class.java)
     private val dummyCourse: CourseEntity = generateDummyCourses()[0]
     private val courseId: String = dummyCourse.courseId
     @get:Rule
@@ -35,7 +38,8 @@ class DetailCourseViewModelTest {
     @Before
     fun setUp() {
         viewModel = DetailCourseViewModel(academyRepository).also {
-            it.courseId = courseId
+            it.setCourseId(courseId)
+            it.setBookmark()
         }
     }
 
@@ -44,6 +48,18 @@ class DetailCourseViewModelTest {
     }
 
     @Test
+    fun testGetCourseWithModule(){
+        val courseEntities = MutableLiveData<Resource<CourseWithModule>>().also{
+            it.value=Resource.success(getGenerateDummyCourseWithModules(dummyCourse,true))
+        }
+        `when`(academyRepository.getCourseWithModule(courseId)).thenReturn(courseEntities)
+        val observer = mock(Observer::class.java) as Observer<Resource<CourseWithModule>>
+        viewModel.courseModule.observeForever(observer)
+        verify(academyRepository).getCourseWithModule(courseId)
+
+    }
+
+    /*@Test
     fun testGetCourse(){
         val courseEntities=MutableLiveData<CourseEntity>().also{
             it.value=dummyCourse
@@ -63,5 +79,5 @@ class DetailCourseViewModelTest {
         val observer = mock(Observer::class.java) as Observer<ArrayList<ModuleEntity>>
         viewModel.getModules().observeForever(observer)
         verify(academyRepository).getAllModulesByCourse(courseId)
-    }
+    }*/
 }

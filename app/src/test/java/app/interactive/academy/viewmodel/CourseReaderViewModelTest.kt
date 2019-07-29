@@ -9,6 +9,7 @@ import app.interactive.academy.data.dummy.generateDummyModules
 import app.interactive.academy.data.source.local.entity.ContentEntity
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.data.source.local.entity.ModuleEntity
+import app.interactive.academy.data.source.vo.Resource
 import app.interactive.academy.ui.reader.CourseReaderViewModel
 import app.interactive.academy.utils.generateRemoteDummyModulesUnitTest
 import junit.framework.Assert.assertEquals
@@ -38,19 +39,18 @@ class CourseReaderViewModelTest {
     @Before
     fun setUp() {
         viewModel = CourseReaderViewModel(academyRepository).also{
-            it.courseId=courseId
-            it.moduleId=moduleId
+            it.setCourseId(courseId)
         }
     }
 
     @Test
     fun testGetModules(){
-        val moduleEntities=MutableLiveData<ArrayList<ModuleEntity>>().also{
-            it.value=dummyModules
+        val moduleEntities=MutableLiveData<Resource<List<ModuleEntity>>>().also{
+            it.value= Resource.success(dummyModules)
         }
         `when`(academyRepository.getAllModulesByCourse(courseId)).thenReturn(moduleEntities)
-        val observer = mock(Observer::class.java) as Observer<ArrayList<ModuleEntity>>
-        viewModel.getModules().observeForever(observer)
+        val observer = mock(Observer::class.java) as Observer<Resource<List<ModuleEntity>>>
+        viewModel.modules.observeForever(observer)
         verify(academyRepository).getAllModulesByCourse(courseId)
     }
 
@@ -58,40 +58,15 @@ class CourseReaderViewModelTest {
     fun testGetSelectedModule(){
         val content="<h3 class=\"fr-text-bordered\">Modul 0 : Introduction</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>"
         val dummyModule = dummyModules[0].copy(contentEntity = ContentEntity(content))
-        val moduleEntity=MutableLiveData<ModuleEntity>().also {
-            it.value=dummyModule
+        val moduleEntity=MutableLiveData<Resource<ModuleEntity>>().also {
+            it.value=Resource.success(dummyModule)
         }
-        `when`(academyRepository.getContent(courseId,moduleId)).thenReturn(moduleEntity)
+        `when`(academyRepository.getContent(moduleId)).thenReturn(moduleEntity)
+        viewModel.setSelectedModule(moduleId)
 //        viewModel.moduleId=moduleId
-        val observer = mock(Observer::class.java) as Observer<ModuleEntity>
-        viewModel.getSelectedModule().observeForever(observer)
-        verify(academyRepository).getContent(courseId,moduleId)
+        val observer = mock(Observer::class.java) as Observer<Resource<ModuleEntity>>
+        viewModel.selectedModule.observeForever(observer)
+        verify(academyRepository).getContent(moduleId)
     }
 
-    /*@Test
-    fun testGetModules(){
-        `when`(academyRepository.getAllModulesByCourse(courseId)).thenReturn(dummyModules)
-        val modulesEntities=viewModel.getModules()
-        verify(academyRepository).getAllModulesByCourse(courseId)
-        assertNotNull(modulesEntities)
-        assertEquals(7,modulesEntities?.size)
-    }
-
-    @Test
-    fun getSelectedModule(){
-        val content="<h3 class=\"fr-text-bordered\">Modul 0 : Introduction</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>"
-        val moduleEntity:ModuleEntity=dummyModules[0].copy(contentEntity= ContentEntity(content))
-
-        `when`(academyRepository.getContent(courseId,moduleId)).thenReturn(moduleEntity)
-        val entity=viewModel.getSelectedModule()
-        verify(academyRepository).getContent(courseId,moduleId)
-        assertNotNull(entity)
-
-        val contentEntity=entity?.contentEntity
-        assertNotNull(contentEntity)
-
-        val resultContent=contentEntity?.content
-        assertNotNull(resultContent)
-        assertEquals(content,resultContent)
-    }*/
 }
