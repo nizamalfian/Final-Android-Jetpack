@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import app.interactive.academy.R
@@ -22,11 +24,44 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
             when(it.status){
                 LOADING -> {}
                 SUCCESS -> {
-
+                    it.data?.let{data->
+                        if(data.isNotEmpty()){
+                            val firstModule=data[0]
+                            val isFirstModuleRead=firstModule.isRead
+                            if(!isFirstModuleRead){
+                                viewModel.setSelectedModule(firstModule.moduleId)
+                            }else{
+                                getLastReadFromModules(data)?.let{moduleId->
+                                    viewModel.setSelectedModule(moduleId)
+                                }
+                            }
+                        }
+                    }
+                }
+                ERROR->{
+                    Toast.makeText(this, "Gagal menampilkan data.", Toast.LENGTH_SHORT).show()
+                    removeObserver()
                 }
             }
         }
     }
+
+    private fun removeObserver() {
+        viewModel.modules.removeObserver(initObserver)
+    }
+
+    private fun getLastReadFromModules(moduleEntities: List<ModuleEntity>): String? {
+        var lastReadModule:String?=null
+        for(module in moduleEntities) {
+            if(module.isRead){
+                lastReadModule=module.moduleId
+                continue
+            }
+            break
+        }
+        return lastReadModule
+    }
+
     private lateinit var viewModel: CourseReaderViewModel
 
     companion object {
@@ -61,6 +96,7 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
     }
 
     override fun moveTo(position: Int, moduleId: String) {
+        Log.d("systemofwdown-activity",moduleId)
         ModuleContentFragment.attach(this, R.id.frame_container)
     }
 

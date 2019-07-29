@@ -47,7 +47,7 @@ class AcademyRepository(
         return object : NetworkBoundResource<List<CourseEntity>,List<CourseResponse>>(appExecutors){
             override fun loadFromDB(): LiveData<List<CourseEntity>> = localRepository.getAllCourses()
 
-            override fun shouldFetch(data: List<CourseEntity>): Boolean = data?.isEmpty() ?: true
+            override fun shouldFetch(data: List<CourseEntity>): Boolean = data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<List<CourseResponse>>> = remoteRepository.getAllCoursesAsLiveData()
 
@@ -72,7 +72,7 @@ class AcademyRepository(
         return object : NetworkBoundResource<CourseWithModule,List<ModuleResponse>>(appExecutors){
             override fun loadFromDB(): LiveData<CourseWithModule> = localRepository.getCourseWithModules(courseId)
 
-            override fun shouldFetch(data: CourseWithModule): Boolean = data==null || data.modules==null || data.modules.isEmpty()
+            override fun shouldFetch(data: CourseWithModule): Boolean = data.modules.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<List<ModuleResponse>>> = remoteRepository.getAllModulesByCourseAsLiveData(courseId)
 
@@ -98,7 +98,7 @@ class AcademyRepository(
         return object:NetworkBoundResource<List<ModuleEntity>,List<ModuleResponse>>(appExecutors){
             override fun loadFromDB(): LiveData<List<ModuleEntity>> = localRepository.getAllModulesByCourse(courseId)
 
-            override fun shouldFetch(data: List<ModuleEntity>): Boolean = data?.isEmpty() ?: true
+            override fun shouldFetch(data: List<ModuleEntity>): Boolean = data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<List<ModuleResponse>>>? = remoteRepository.getAllModulesByCourseAsLiveData(courseId)
 

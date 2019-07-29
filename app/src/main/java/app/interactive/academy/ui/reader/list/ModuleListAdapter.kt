@@ -1,5 +1,6 @@
 package app.interactive.academy.ui.reader.list
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class ModuleListAdapter(private val onItemClicked:(position:Int,moduleId:String)
             val viewHolder = holder as ViewHolder
             viewHolder.bind(module.title)
             viewHolder.itemView.setOnClickListener {
+                Log.d("systemofwdown-adapter",module.moduleId)
                 onItemClicked(position,module.moduleId)
             }
         }

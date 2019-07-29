@@ -146,8 +146,8 @@ class DetailCourseActivity : AppCompatActivity() {
         if(menu==null)
             return
         val menuItem=menu?.findItem(R.id.action_bookmark)
-        menuItem?.let{menuItem->
-            state?.let{menuItem.setIcon(ContextCompat.getDrawable(this,if(it)R.drawable.ic_bookmarked_white else R.drawable.ic_bookmark_white))}
+        menuItem?.let{item->
+            state?.let{item.setIcon(ContextCompat.getDrawable(this,if(it)R.drawable.ic_bookmarked_white else R.drawable.ic_bookmark_white))}
         }
     }
 
@@ -164,7 +164,7 @@ class DetailCourseActivity : AppCompatActivity() {
             txtDesc.text = it.description
             txtDate.text = String.format("Deadline %s", it.deadline)
 
-            btnStart.setOnClickListener {btn->
+            btnStart.setOnClickListener {_->
                 CourseReaderActivity.launch(this, it.courseId, false)
             }
         }
