@@ -22,5 +22,5 @@ class AcademyViewModel(private val academyRepository: AcademyRepository):ViewMod
         login.value=username
     }
 
-    fun getCourses():LiveData<Resource<List<CourseEntity>>> = Transformations.switchMap(login){_->academyRepository.getAllCourses()}
+    fun getCourses():LiveData<Resource<List<CourseEntity>>> = Transformations.switchMap(login){ academyRepository.getAllCourses()}
 }

@@ -15,7 +15,7 @@ abstract class NetworkBoundResource<ResultType,RequestType>(private val appExecu
     private val result:MediatorLiveData<Resource<ResultType>> = MediatorLiveData()
 
     init {
-        result.setValue(Resource.loading())
+        result.value = Resource.loading()
         val dbSource : LiveData<ResultType> = loadFromDB()
         result.addSource(dbSource) { data->
             result.removeSource(dbSource)

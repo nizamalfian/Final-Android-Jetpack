@@ -7,7 +7,6 @@ import app.interactive.academy.data.source.remote.response.CourseResponse
 import app.interactive.academy.data.source.remote.response.ModuleResponse
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.IOException
 
 /**
  * Created by L
