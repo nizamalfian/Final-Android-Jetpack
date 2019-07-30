@@ -29,7 +29,7 @@ import app.interactive.academy.utils.visible
  *
  */
 class BookmarkFragment : Fragment() {
-    private lateinit var adapter: BookmarkAdapter
+    private lateinit var adapter: BookmarkPagedAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var viewModel: BookmarkViewModel
@@ -72,7 +72,7 @@ class BookmarkFragment : Fragment() {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            this@BookmarkFragment.adapter= BookmarkAdapter { course, isShareButton ->
+            this@BookmarkFragment.adapter= BookmarkPagedAdapter { course, isShareButton ->
                 activity.apply {
                     if (isShareButton) {
                         val mimeType = "text/plain"

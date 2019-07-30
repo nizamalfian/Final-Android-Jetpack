@@ -1,6 +1,7 @@
 package app.interactive.academy.data.source.local
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import app.interactive.academy.data.source.local.entity.CourseEntity
 import app.interactive.academy.data.source.local.entity.CourseWithModule
 import app.interactive.academy.data.source.local.entity.ModuleEntity
@@ -25,6 +26,8 @@ class LocalRepository(private val academyDao: AcademyDao) {
     fun getAllCourses():LiveData<List<CourseEntity>> = academyDao.getCourses()
 
     fun getBookmarkedCourses():LiveData<List<CourseEntity>> = academyDao.getBookmarkedCourses()
+
+    fun getBookmarkedCoursesAsPaged():DataSource.Factory<Int,CourseEntity> = academyDao.getBookmarkedCoursesAsPaged()
 
     fun getCourseWithModules(courseId:String):LiveData<CourseWithModule> = academyDao.getCourseWithModulesById(courseId)
 

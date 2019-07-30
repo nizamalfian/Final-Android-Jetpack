@@ -18,9 +18,9 @@ class HomeActivity : AppCompatActivity() {
         navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(navigationItemSelectedListener)
 
-        navView.selectedItemId=when(savedInstanceState!=null){
+        when(savedInstanceState!=null){
             true->savedInstanceState.getInt(SELECTED_MENU)
-            false->R.id.action_home
+            false-> navView.selectedItemId = R.id.action_home
         }
     }
 
@@ -32,8 +32,12 @@ class HomeActivity : AppCompatActivity() {
     private val navigationItemSelectedListener=BottomNavigationView.OnNavigationItemSelectedListener {
         R.id.container.run {
             when(it.itemId){
-                R.id.action_home->AcademyFragment.attach(this@HomeActivity,this)
-                R.id.action_bookmark->BookmarkFragment.attach(this@HomeActivity,this)
+                R.id.action_home->{
+                    AcademyFragment.attach(this@HomeActivity,this)
+                }
+                R.id.action_bookmark->{
+                    BookmarkFragment.attach(this@HomeActivity,this)
+                }
             }
         }
         true
