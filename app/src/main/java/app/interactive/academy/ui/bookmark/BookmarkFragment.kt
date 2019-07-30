@@ -15,6 +15,7 @@ import androidx.core.app.ShareCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
@@ -23,6 +24,7 @@ import app.interactive.academy.ui.viewmodel.ViewModelFactory
 import app.interactive.academy.utils.gone
 import app.interactive.academy.data.source.vo.Status.*
 import app.interactive.academy.utils.visible
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A simple [Fragment] subclass.
@@ -67,6 +69,8 @@ class BookmarkFragment : Fragment() {
         activity?.let {
             viewModel = ViewModelProviders.of(it, ViewModelFactory.getInstance(it.application))
                 .get(BookmarkViewModel::class.java)
+
+            itemTouchHelper.attachToRecyclerView(recyclerView)
         }
 
         recyclerView.apply {
@@ -110,5 +114,27 @@ class BookmarkFragment : Fragment() {
                 }
             })
     }
+
+    private val itemTouchHelper = ItemTouchHelper(object: ItemTouchHelper.Callback(){
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int =
+            makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean = true
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            view?.let{
+                adapter.getItemById(viewHolder.adapterPosition)?.run{
+                    viewModel.setBookmark(this)
+                    Snackbar.make(it,R.string.message_undo,Snackbar.LENGTH_LONG)
+                        .setAction(R.string.message_ok){v->viewModel.setBookmark(this)}
+                        .show()
+                }
+            }
+        }
+    })
 
 }

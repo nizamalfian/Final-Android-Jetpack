@@ -39,7 +39,7 @@ class ModuleListFragment : Fragment() {
 
     companion object{
         val TAG=ModuleListFragment::class.java.simpleName
-        private fun newInstance(): Fragment = ModuleListFragment()
+        fun newInstance(): Fragment = ModuleListFragment()
         fun attach(activity: AppCompatActivity, @IdRes container:Int, fragment:Fragment= newInstance()){
             activity.run {
                 supportFragmentManager

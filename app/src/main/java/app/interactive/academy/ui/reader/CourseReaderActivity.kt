@@ -5,9 +5,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import app.interactive.academy.R
 import app.interactive.academy.data.source.local.entity.ModuleEntity
 import app.interactive.academy.data.source.vo.Resource
@@ -19,26 +23,28 @@ import app.interactive.academy.ui.viewmodel.ViewModelFactory
 import app.interactive.academy.data.source.vo.Status.*
 
 class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
-    private val initObserver: Observer<Resource<List<ModuleEntity>>> = Observer {modules->
-        modules?.let{
-            when(it.status){
-                LOADING -> {}
+    private var isLarge = false
+    private val initObserver: Observer<Resource<List<ModuleEntity>>> = Observer { modules ->
+        modules?.let {
+            when (it.status) {
+                LOADING -> {
+                }
                 SUCCESS -> {
-                    it.data?.let{data->
-                        if(data.isNotEmpty()){
-                            val firstModule=data[0]
-                            val isFirstModuleRead=firstModule.isRead
-                            if(!isFirstModuleRead){
+                    it.data?.let { data ->
+                        if (data.isNotEmpty()) {
+                            val firstModule = data[0]
+                            val isFirstModuleRead = firstModule.isRead
+                            if (!isFirstModuleRead) {
                                 viewModel.setSelectedModule(firstModule.moduleId)
-                            }else{
-                                getLastReadFromModules(data)?.let{moduleId->
+                            } else {
+                                getLastReadFromModules(data)?.let { moduleId ->
                                     viewModel.setSelectedModule(moduleId)
                                 }
                             }
                         }
                     }
                 }
-                ERROR->{
+                ERROR -> {
                     Toast.makeText(this, "Gagal menampilkan data.", Toast.LENGTH_SHORT).show()
                     removeObserver()
                 }
@@ -51,10 +57,10 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
     }
 
     private fun getLastReadFromModules(moduleEntities: List<ModuleEntity>): String? {
-        var lastReadModule:String?=null
-        for(module in moduleEntities) {
-            if(module.isRead){
-                lastReadModule=module.moduleId
+        var lastReadModule: String? = null
+        for (module in moduleEntities) {
+            if (module.isRead) {
+                lastReadModule = module.moduleId
                 continue
             }
             break
@@ -81,23 +87,52 @@ class CourseReaderActivity : AppCompatActivity(), CourseReaderCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_reader)
-        viewModel=ViewModelProviders.of(this,ViewModelFactory.getInstance(application)).get(CourseReaderViewModel::class.java)
 
-        viewModel.modules.observe(this,initObserver)
+        if (findViewById<FrameLayout>(R.id.frame_list) != null)
+            isLarge = true
 
-        intent?.extras?.getString(EXTRA_COURSE_ID)?.let{
+        viewModel = ViewModelProviders.of(this, ViewModelFactory.getInstance(application))
+            .get(CourseReaderViewModel::class.java)
+
+        viewModel.modules.observe(this, initObserver)
+
+        intent?.extras?.getString(EXTRA_COURSE_ID)?.let {
             viewModel.setCourseId(it)
             populateFragment()
         }
     }
 
     private fun populateFragment() {
-        ModuleListFragment.attach(this,R.id.frame_container)
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        if (!isLarge) {
+            var fragment: Fragment? = supportFragmentManager.findFragmentByTag(ModuleListFragment.TAG)
+            if (fragment == null) {
+                fragment = ModuleListFragment.newInstance()
+                fragmentTransaction.add(R.id.frame_container, fragment, ModuleListFragment.TAG)
+            }
+            fragmentTransaction.commit()
+        } else {
+            /*var fragmentList: Fragment? = supportFragmentManager.findFragmentByTag(ModuleListFragment.TAG)
+            if (fragmentList == null) {
+                fragmentList = ModuleListFragment.newInstance()
+                fragmentTransaction.add(R.id.frame_list, fragmentList, ModuleListFragment.TAG)
+            }
+            var frameContent: Fragment? = supportFragmentManager.findFragmentByTag(ModuleContentFragment.TAG)
+            if (frameContent == null) {
+                frameContent = ModuleContentFragment.newInstance()
+                fragmentTransaction.add(R.id.frame_container, frameContent, ModuleContentFragment.TAG)
+            }
+            fragmentTransaction.commit()*/
+            ModuleListFragment.attach(this, R.id.frame_list)
+            ModuleContentFragment.attach(this, R.id.frame_content)
+        }
     }
 
     override fun moveTo(position: Int, moduleId: String) {
-        Log.d("systemofwdown-activity",moduleId)
-        ModuleContentFragment.attach(this, R.id.frame_container)
+        if (!isLarge) {
+            Log.d("systemofwdown-activity", moduleId)
+            ModuleContentFragment.attach(this, R.id.frame_container)
+        }
     }
 
     override fun onBackPressed() {
