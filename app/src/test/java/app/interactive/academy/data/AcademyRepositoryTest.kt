@@ -2,6 +2,7 @@ package app.interactive.academy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
 import app.interactive.academy.data.dummy.*
 import app.interactive.academy.data.source.local.LocalRepository
 import app.interactive.academy.data.source.local.entity.CourseEntity
@@ -63,13 +64,10 @@ class AcademyRepositoryTest{
 
     @Test
     fun testGetBookmarkedCourses(){
-        val dummyCourse = MutableLiveData<List<CourseEntity>>().also{
-            it.value= generateDummyCourses()
-        }
-        `when`(local.getBookmarkedCourses()).thenReturn(dummyCourse)
-        val result:Resource<List<CourseEntity>> = LiveDataTestUtil.getValue(academyRepository.getBookmarkedCourses())
-        verify(local).getBookmarkedCourses()
-        assertNotNull(result)
+        val dataSourceFactory:DataSource.Factory<Int,CourseEntity> = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, CourseEntity>
+        `when`(local.getBookmarkedCoursesAsPaged()).thenReturn(dataSourceFactory)
+        academyRepository.getBookmarkedCoursesAsPaged()
+        verify(local).getBookmarkedCoursesAsPaged()
     }
 
     @Test

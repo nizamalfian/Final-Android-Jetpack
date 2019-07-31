@@ -132,18 +132,6 @@ class AcademyRepository(
         }.asLiveData()
     }
 
-    override fun getBookmarkedCourses(): LiveData<Resource<List<CourseEntity>>> {
-        return object:NetworkBoundResource<List<CourseEntity>,List<CourseResponse>>(appExecutors){
-            override fun loadFromDB(): LiveData<List<CourseEntity>> = localRepository.getBookmarkedCourses()
-
-            override fun shouldFetch(data: List<CourseEntity>): Boolean = false
-
-            override fun createCall(): LiveData<ApiResponse<List<CourseResponse>>>? = null
-
-            override fun saveCallResult(data: List<CourseResponse>) {}
-        }.asLiveData()
-    }
-
     override fun getContent(moduleId: String): LiveData<Resource<ModuleEntity>> {
         return object:NetworkBoundResource<ModuleEntity,ContentResponse>(appExecutors){
             override fun loadFromDB(): LiveData<ModuleEntity> = localRepository.getModuleWithContent(moduleId)

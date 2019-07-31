@@ -3,6 +3,7 @@ package app.interactive.academy.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import app.interactive.academy.data.AcademyRepository
 import app.interactive.academy.data.dummy.generateDummyCourses
 import app.interactive.academy.data.source.local.entity.CourseEntity
@@ -39,13 +40,14 @@ class BookmarkViewModelTest {
     fun tearDown(){}
     @Test
     fun testGetCourses(){
-        val courses=MutableLiveData<Resource<List<CourseEntity>>>().also{
-            it.value=Resource.success(generateDummyCourses())
+        val courses=MutableLiveData<Resource<PagedList<CourseEntity>>>().also{
+            val pagedList:PagedList<CourseEntity> = mock(PagedList::class.java) as PagedList<CourseEntity>
+            it.value=Resource.success(pagedList)
         }
-        `when`(academyRepository.getBookmarkedCourses()).thenReturn(courses)
-        val observer:Observer<Resource<List<CourseEntity>>> = mock(Observer::class.java) as Observer<Resource<List<CourseEntity>>>
+        `when`(academyRepository.getBookmarkedCoursesAsPaged()).thenReturn(courses)
+        val observer:Observer<Resource<PagedList<CourseEntity>>> = mock(Observer::class.java) as Observer<Resource<PagedList<CourseEntity>>>
         viewModel.getBookmarks().observeForever(observer)
-        verify(academyRepository).getBookmarkedCourses()
+        verify(academyRepository).getBookmarkedCoursesAsPaged()
     }
 
 }
