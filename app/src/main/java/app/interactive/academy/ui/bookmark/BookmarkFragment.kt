@@ -130,7 +130,7 @@ class BookmarkFragment : Fragment() {
                 adapter.getItemById(viewHolder.adapterPosition)?.run{
                     viewModel.setBookmark(this)
                     Snackbar.make(it,R.string.message_undo,Snackbar.LENGTH_LONG)
-                        .setAction(R.string.message_ok){v->viewModel.setBookmark(this)}
+                        .setAction(R.string.message_ok){ _ ->viewModel.setBookmark(this)}
                         .show()
                 }
             }

@@ -31,7 +31,7 @@ class BookmarkPagedAdapter(private val onClick:(course: CourseEntity, isShareBut
         }
     }
 
-    fun getItemById(swipePosition:Int):CourseEntity?=getItem(swipePosition)
+    fun getItemById(swipePosition:Int):CourseEntity?=courses[swipePosition]
 
     fun updateData(data: List<CourseEntity>?){
         data?.let {
