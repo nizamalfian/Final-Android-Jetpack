@@ -8,4 +8,6 @@
     <color name="colorTextSecondary">#6D767E</color>
     <color name="colorTextTertiary">#EFEFEF</color>
     <color name="colorAccentSecondary">#FF8FAF</color>
+    <color name="textColor">#3e3c41</color>
+    <color name="yellowStar">#F9A825</color>
 </resources>
