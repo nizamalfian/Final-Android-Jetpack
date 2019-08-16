@@ -6,9 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.nizamalfian.androidjetpack.data.MovieRepository
 import com.nizamalfian.androidjetpack.di.Injection
-import com.nizamalfian.androidjetpack.ui.reader.CourseReaderViewModel
-import com.nizamalfian.androidjetpack.ui.bookmark.BookmarkViewModel
-import com.nizamalfian.androidjetpack.ui.detail_.DetailCourseViewModel
 import com.nizamalfian.androidjetpack.ui.academy.AcademyViewModel
 
 
@@ -18,7 +15,7 @@ import com.nizamalfian.androidjetpack.ui.academy.AcademyViewModel
  *
  * on 7/8/2019
  */
-class ViewModelFactory(private val academyRepository: MovieRepository):ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory(private val movieRepository: MovieRepository):ViewModelProvider.NewInstanceFactory() {
     companion object{
         private var INSTANCE:ViewModelFactory?=null
         fun getInstance(application: Application):ViewModelFactory{
@@ -36,10 +33,11 @@ class ViewModelFactory(private val academyRepository: MovieRepository):ViewModel
     @NonNull
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when {
-            modelClass.isAssignableFrom(MovieViewModel::class.java) -> MovieViewModel(academyRepository) as T
-            modelClass.isAssignableFrom(TVShowViewModel::class.java) -> TVShowViewModel(academyRepository) as T
-            modelClass.isAssignableFrom(BookmarkedMovieViewModel::class.java) -> BookmarkedMovieViewModel(academyRepository) as T
-            modelClass.isAssignableFrom(BookmarkedTVShowViewModel::class.java) -> BookmarkedTVShowViewModel(academyRepository) as T
+            modelClass.isAssignableFrom(MovieViewModel::class.java) -> MovieViewModel(movieRepository) as T
+            modelClass.isAssignableFrom(TVShowViewModel::class.java) -> TVShowViewModel(movieRepository) as T
+            modelClass.isAssignableFrom(BookmarkedMovieViewModel::class.java) -> BookmarkedMovieViewModel(movieRepository) as T
+            modelClass.isAssignableFrom(BookmarkedTVShowViewModel::class.java) -> BookmarkedTVShowViewModel(movieRepository) as T
+            modelClass.isAssignableFrom(AcademyViewModel::class.java) -> AcademyViewModel(movieRepository) as T
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
 

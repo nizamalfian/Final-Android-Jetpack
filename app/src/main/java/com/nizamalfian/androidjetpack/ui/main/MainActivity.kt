@@ -13,7 +13,7 @@ import com.nizamalfian.androidjetpack.base.BaseContentFragment.Companion.attach 
 /**
  * Created by nizamalfian on 02/08/2019.
  */
-open class MainActivity:BaseActivity(R.layout.activity_main) {
+class MainActivity:BaseActivity(R.layout.activity_main) {
     private lateinit var frameLayout:FrameLayout
     private lateinit var bottomNavigation:BottomNavigationView
     private lateinit var toolbar:Toolbar

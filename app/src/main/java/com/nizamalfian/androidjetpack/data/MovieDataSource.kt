@@ -13,6 +13,7 @@ import com.nizamalfian.androidjetpack.data.vo.Resource
 interface MovieDataSource {
     fun getAllCourses():LiveData<Resource<List<CourseEntity>>>
     fun getAllMovies():LiveData<Resource<List<MovieEntity>>>
+    fun getAllMoviesAsPaged():LiveData<Resource<PagedList<MovieEntity>>>
     fun getAllTVShows():LiveData<Resource<List<MovieEntity>>>
     fun getCourseWithModule(courseId:String):LiveData<Resource<CourseWithModule>>
     fun getMovieWithGenre(movieId:Int):LiveData<Resource<MovieWithGenres>>

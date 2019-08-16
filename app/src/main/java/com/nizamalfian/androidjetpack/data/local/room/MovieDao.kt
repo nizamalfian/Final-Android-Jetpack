@@ -20,6 +20,10 @@ interface MovieDao {
     fun getMovies():LiveData<List<MovieEntity>>
 
     @WorkerThread
+    @Query("SELECT * FROM MovieEntity where isTVShow=0")
+    fun getMoviesAsPaged():DataSource.Factory<Int,MovieEntity>
+
+    @WorkerThread
     @Query("SELECT * FROM MovieEntity where isTVShow=1")
     fun getTVShows():LiveData<List<MovieEntity>>
 

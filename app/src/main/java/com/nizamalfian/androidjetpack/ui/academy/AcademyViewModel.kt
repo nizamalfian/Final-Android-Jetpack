@@ -17,7 +17,7 @@ class AcademyViewModel(private val academyRepository: MovieRepository):ViewModel
     private val login = MutableLiveData<String>()
 
     fun setUsername(username:String){
-        login.value=username
+        login.postValue(username)
     }
 
     fun getCourses():LiveData<Resource<List<CourseEntity>>> = Transformations.switchMap(login){ academyRepository.getAllCourses()}

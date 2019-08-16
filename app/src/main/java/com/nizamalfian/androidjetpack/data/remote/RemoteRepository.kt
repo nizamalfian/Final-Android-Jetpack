@@ -1,9 +1,11 @@
 package com.nizamalfian.androidjetpack.data.remote
 
 import android.os.Handler
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nizamalfian.androidjetpack.data.remote.response.*
+import com.nizamalfian.androidjetpack.ui.movie.MovieFragment
 import com.nizamalfian.androidjetpack.utils.EspressoIdlingResource
 
 
@@ -27,21 +29,23 @@ class RemoteRepository(private val jsonHelper: JSONHelper) {
 
     fun getAllMoviesAsLiveData():LiveData<ApiResponse<List<MovieResponse>>>{
         EspressoIdlingResource.increment()
-        return MutableLiveData<ApiResponse<List<MovieResponse>>>().also{
-            Handler().postDelayed({
-                it.value=
-                    ApiResponse.success(jsonHelper.loadMovies())
-                EspressoIdlingResource.decrement()
-            },SERVICE_LATENCY_IN_MILLIS)
-        }
+        val result = MutableLiveData<ApiResponse<List<MovieResponse>>>()
+        Handler().postDelayed({
+            val response=jsonHelper.loadMovies()
+            result.value=ApiResponse.success(response)
+            response.forEach {
+                Log.d(MovieFragment.TAG+"_item",it.toString())
+            }
+            EspressoIdlingResource.decrement()
+        },SERVICE_LATENCY_IN_MILLIS)
+        return result
     }
 
     fun getAllTVShowsAsLiveData():LiveData<ApiResponse<List<MovieResponse>>>{
         EspressoIdlingResource.increment()
         return MutableLiveData<ApiResponse<List<MovieResponse>>>().also{
             Handler().postDelayed({
-                it.value=
-                    ApiResponse.success(jsonHelper.loadTVShows())
+                it.value= ApiResponse.success(jsonHelper.loadTVShows())
                 EspressoIdlingResource.decrement()
             },SERVICE_LATENCY_IN_MILLIS)
         }

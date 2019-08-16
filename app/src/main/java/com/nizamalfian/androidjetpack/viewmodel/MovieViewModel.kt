@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
 import com.nizamalfian.androidjetpack.data.MovieRepository
 import com.nizamalfian.androidjetpack.data.local.entity.MovieEntity
 import com.nizamalfian.androidjetpack.data.vo.Resource
@@ -13,12 +14,13 @@ import com.nizamalfian.androidjetpack.data.vo.Resource
  *
  * on 8/13/2019
  */
-class MovieViewModel(private val academyRepository: MovieRepository): ViewModel() {
+class MovieViewModel(private val movieRepository: MovieRepository): ViewModel() {
     private val login = MutableLiveData<String>()
 
     fun setUsername(username:String){
         login.value=username
     }
 
-    fun getMovies(): LiveData<Resource<List<MovieEntity>>> = Transformations.switchMap(login){ academyRepository.getAllMovies()}
+    fun getMovies(): LiveData<Resource<List<MovieEntity>>> = Transformations.switchMap(login){ movieRepository.getAllMovies()}
+
 }

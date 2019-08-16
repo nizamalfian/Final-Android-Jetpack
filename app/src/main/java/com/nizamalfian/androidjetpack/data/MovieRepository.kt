@@ -44,6 +44,43 @@ class MovieRepository(
         }
     }
 
+    override fun getAllMoviesAsPaged(): LiveData<Resource<PagedList<MovieEntity>>> {
+        return object : NetworkBoundResource<PagedList<MovieEntity>, List<MovieResponse>>(appExecutors) {
+            override fun loadFromDB(): LiveData<PagedList<MovieEntity>> =
+                LivePagedListBuilder(localRepository.getAllMoviesAsPaged(), 20).build()
+
+            override fun shouldFetch(data: PagedList<MovieEntity>): Boolean = data.isEmpty()
+
+            override fun createCall(): LiveData<ApiResponse<List<MovieResponse>>>? = remoteRepository.getAllMoviesAsLiveData()
+
+            override fun saveCallResult(data: List<MovieResponse>) {
+                ArrayList<MovieEntity>().run {
+                    data.forEach {
+                        add(
+                            MovieEntity(
+                                it.id,
+                                it.title,
+                                it.originalTitle,
+                                it.posterPath,
+                                it.voteCount,
+                                it.voteAverage,
+                                it.popularity,
+                                it.backdropPath,
+                                it.overview,
+                                it.releaseDate,
+                                it.language,
+                                false
+                            )
+                        )
+                    }
+                    Log.d(MovieFragment.TAG+"_saveCallResult",data.size.toString())
+                    localRepository.insertMovies(this)
+                }
+            }
+
+        }.asLiveData()
+    }
+
     override fun getAllMovies(): LiveData<Resource<List<MovieEntity>>> {
         return object : NetworkBoundResource<List<MovieEntity>, List<MovieResponse>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<MovieEntity>> {

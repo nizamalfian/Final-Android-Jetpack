@@ -27,6 +27,8 @@ class LocalRepository(private val movieDao: MovieDao) {
 
     fun getAllMovies():LiveData<List<MovieEntity>> = movieDao.getMovies()
 
+    fun getAllMoviesAsPaged():DataSource.Factory<Int,MovieEntity> = movieDao.getMoviesAsPaged()
+
     fun getAllTVShows():LiveData<List<MovieEntity>> = movieDao.getMovies()
 
     fun getBookmarkedMovies():LiveData<List<MovieEntity>> = movieDao.getBookmarkedMovies()
